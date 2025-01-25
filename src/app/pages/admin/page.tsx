@@ -138,7 +138,7 @@ const Admin:React.FC = () => {
             }} required></input>
 
             <h1 className="font-bold text-lg">Level</h1>
-            <select className="shadow-xll p-3 rounded w-full outline-none"
+            <select className="shadow-xll p-3 rounded w-full outline-none bg-white"
             value={level}
              onChange={(e)=> {
                 setlevel(parseInt(e.target.value));

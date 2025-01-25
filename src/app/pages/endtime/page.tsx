@@ -113,7 +113,7 @@ const CheckTime:React.FC = () => {
    
       const router = useRouter();
     return mediaQuery === 'mobile' ? (
-        <div className="w-full h-screen flex justify-center items-center flex-col">
+        <div className="w-full h-screen flex justify-center items-center flex-col p-2">
             <div className="w-96 rounded shadow-xll h-96 flex justify-center items-center flex-col gap-10 p-3">
                 <div className="fixed top-0 left-0 w-36 shadow-xll rounded h-auto p-2 flex gap-2 items-center">
                     <FontAwesomeIcon icon={faBook}></FontAwesomeIcon>

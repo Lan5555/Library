@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import 'react-toastify/ReactToastify.css'  // Import the Toastify CSS
 import Notify from "../hooks/notification";
 import Login from "./login";
+import { subDays } from "date-fns";
+import { doc, setDoc } from "@firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { db } from "../../../firebaseConfig";
 
 /* eslint-disable @next/next/no-img-element */
 interface Props{
@@ -70,6 +74,21 @@ const Register:React.FC<Props> = ({onclick}) => {
         const [formData, setFormData] = useState({name: "",  email: "", password: "",confirm:'', level: 100});
         const router = useRouter();
         
+          const addTime = async() => {
+                  const user = getAuth().currentUser;
+                  if(user){
+                  try{
+                  const expiryDate = subDays(new Date(), 4);
+                  const userRef = doc(db,'users',`${user?.uid}`);
+                  await setDoc(userRef,{expiry:expiryDate},{merge:true});
+                  showToast('Successful');
+                  }catch(e){
+                  }
+               }else{
+                  
+                  }
+                }
+        
     return mediaQuery === 'mobile' && !login ? (
         <div className="flex flex-col justify-evenly items-center mt-10 w-full">
             <img src="/avatar/register.png" alt="photo" className="h-60 w-60"></img>
@@ -85,6 +104,7 @@ const Register:React.FC<Props> = ({onclick}) => {
                 if(result.success){
                     showToast('Success');
                     setTimeout(() => {
+                      addTime();
                     router.push('/pages/endtime');
                     }, 4000);
                 }else{
@@ -110,7 +130,7 @@ const Register:React.FC<Props> = ({onclick}) => {
                 onChange={(e)=>setFormData({...formData, name:e.target.value})}
                  placeholder="NickName" className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
                  <label htmlFor="set" className="relative left-2">Your current level</label>
-                <select onChange={(e) => setFormData({...formData,level:parseInt(e.target.value)})} className="shadow-xll p-3 rounded-lg" id="set" required>
+                <select onChange={(e) => setFormData({...formData,level:parseInt(e.target.value)})} className="shadow-xll p-3 rounded-lg bg-white" id="set" required>
                     {levels.map((element,index) => 
                     <option key={index}>{element}</option>
                     )}
