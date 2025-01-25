@@ -105,13 +105,13 @@ const Login: React.FC<Props> = ({ onclick }) => {
           required
         />
         <div className="flex w-full justify-end p-2">
-          <a className="text-pretty text-blue-700">Forgotten your password?</a>
+          <a className="text-pretty ">Forgotten your password?</a>
         </div>
         <button type="submit" className="text-white bg-blue-700 p-3 rounded-xl shadow-xl">
           {loading ? <CircularProgress /> : 'Sign in'}
         </button>
       </form>
-      <a className="animate-pulse" onClick={() => onclick(true)}>Create an account</a>
+      <a className="animate-pulse text-blue-700" onClick={() => onclick(true)}>Create an account</a>
       <h3 className="text-center">&copy; Computer Science Department. <br /> University of Jos.</h3>
       <ToastContainer aria-label="Toast messages" />
     </div>
