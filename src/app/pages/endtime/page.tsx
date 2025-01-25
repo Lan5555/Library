@@ -15,10 +15,8 @@ import { useRouter } from "next/navigation";
 import Notify from "@/app/hooks/notification";
 
 
-interface Prop{
-    message?:string
-}
-const CheckTime:React.FC<Prop> = ({message = 'You are required to subscribe before getting your pass, and after two weeks, you will have to resubscribe.'}) => {
+const CheckTime:React.FC = () => {
+
   const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
     useEffect(() => {
       // Create the media query matcher
@@ -126,7 +124,7 @@ const CheckTime:React.FC<Prop> = ({message = 'You are required to subscribe befo
                     color:'blue'
                 }} className="animate-pulse"></FontAwesomeIcon>
                 <h1 className="font-bold">Information</h1>
-                <p className="text-center">{message}</p>
+                <p className="text-center">You are required to subscribe before getting your pass, and after two weeks, you will have to resubscribe.</p>
                 <button className="p-2 rounded w-full text-white bg-blue-600 hover:bg-black" onClick={() => {
                     handleFlutterPayment({
                         callback:  (response) => {
