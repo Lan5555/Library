@@ -104,7 +104,7 @@ const Payment: React.FC = () => {
     fetchData();
   }, [user?.uid]);
 
-  if (!expiryDate) return <Center><CircularProgress /></Center>;
+  //if (!expiryDate) return <Center><CircularProgress /></Center>;
 
   const remainingTime = formatDistanceToNow(expiryDate, { addSuffix: true });
 
@@ -146,20 +146,20 @@ const Payment: React.FC = () => {
       
       <h1 className="font-bold mt-5 text-xl opacity-70">Renew plan</h1>
       
-      <div className="rounded-2xl bg-gray-200 w-full h-20 mt-5 flex justify-between p-5 items-center">
+      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
         <h2><FontAwesomeIcon icon={faCalendarWeek} /> Weekly payment</h2>
         <button
-          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3"
+          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3 text-xs"
           onClick={() => processPayment(200, 14)}
         >
           NGN 200
         </button>
       </div>
 
-      <div className="rounded-2xl bg-gray-200 w-full h-20 mt-5 flex justify-between p-5 items-center">
+      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
         <h2><FontAwesomeIcon icon={faCalendar} /> Monthly payment</h2>
         <button
-          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3"
+          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3 text-xs"
           onClick={() => processPayment(400, 28)}
         >
           NGN 400
@@ -167,11 +167,11 @@ const Payment: React.FC = () => {
       </div>
 
       <h1 className="font-bold mt-5 text-xl opacity-65">Query transaction</h1>
-      <h1 className="font-bold mt-5 text-xl text-blue-400">Renew plan</h1>
-      <p className="opacity-60 text-sm">Input transaction number from transaction receipt after successful transfer.</p>
-      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-center items-center">
-        <FontAwesomeIcon icon={faListNumeric} className="relative -left-3" />
-        <input type="number" className="w-72 p-2 bg-transparent outline-none" placeholder="Input transaction number here" />
+      <h1 className="font-bold mt-5 text-sm text-blue-400">Renew plan</h1>
+      <p className="opacity-60 text-xs">Input transaction number from transaction receipt after successful transfer.</p>
+      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-2">
+        <FontAwesomeIcon icon={faListNumeric} />
+        <input type="number" className="w-72 p-1 bg-transparent outline-none" placeholder="Input transaction number here" />
       </div>
       <button className="w-full rounded-lg p-2 bg-gradient-to-tr from-slate-300 to-blue-600 text-black text-center mt-5 shadow hover:bg-green-300">
         Query

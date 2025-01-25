@@ -188,7 +188,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   
   return (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
-      <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-full h-48 flex justify-center items-center shadow">
+      <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow">
         <div className="flex gap-5">
           <div className="rounded-full p-2 flex justify-center items-center bg-gradient-to-tr h-20 w-20">
             <FontAwesomeIcon icon={faComputer} style={{ height: '30px' }} className="text-white" />
@@ -210,7 +210,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         {courses.map((course, index) => (
           <div
             key={index}
-            className="rounded-xl h-40 w-40 shadow-xll p-2 flex justify-center items-center flex-col gap-3 hover:bg-blue-300"
+            className="rounded-xl h-36 w-36 shadow-xll p-2 flex justify-center items-center flex-col gap-3 hover:bg-blue-300"
             onClick={() => pushCourse(course.code)} // Passing the full course code
            style={{
             backgroundImage:'url("/avatar/book5.jpeg")',
@@ -219,7 +219,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             backgroundRepeat:'no-repeat',
             border:'1px solid rgba(0,0,0,0.2'
            }}>
-            <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-3" onClick={() => {}} />
+            <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-1" onClick={() => {}} />
             <FontAwesomeIcon icon={faBookAtlas} color="blue" style={{ height: '40px' }} className="relative left-5" />
             <h1 className="font-bold relative left-5" style={{
               textShadow:'4px 8px 18px blue'

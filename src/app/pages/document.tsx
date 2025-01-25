@@ -126,7 +126,6 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     if (selectedCourse && selectedLink) {
       // Store the selected course and its link in localStorage
       const selectedData = selectedLink;
-      alert(selectedLink);
       localStorage.setItem('link',selectedData);
       showToast('Course ready now clicked the icon below to read!')
     }

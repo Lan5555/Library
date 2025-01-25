@@ -77,7 +77,7 @@ export const Settings:React.FC = () => {
     },[]);
     
     return (
-        <div className="w-full h-auto">
+        <div className="w-full h-auto p-2">
             <ListTile
             leading={<FontAwesomeIcon icon={faBell} style={{
                 height:'20px'
