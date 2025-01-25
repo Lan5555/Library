@@ -6,7 +6,6 @@ import ListTile from "../components/list_tile";
 import { faAngleRight, faBook } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, SetStateAction } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
 import { getAuth } from "firebase/auth"; // Firebase Authentication
 import { db } from "../../../firebaseConfig"; // Your Firebase DB initialization
 import { query, collection, where, getDocs } from "firebase/firestore"; // Firebase Firestore methods
