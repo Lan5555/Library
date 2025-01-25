@@ -15,10 +15,10 @@ import { useRouter } from "next/navigation";
 import Notify from "@/app/hooks/notification";
 
 
-interface prop{
+interface Prop{
     message?:string
 }
-const CheckTime:React.FC<prop> = ({message = 'You are required to subscribe before getting your pass, and after two weeks, you will have to resubscribe.'}) => {
+const CheckTime:React.FC<Prop> = ({message = 'You are required to subscribe before getting your pass, and after two weeks, you will have to resubscribe.'}) => {
   const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
     useEffect(() => {
       // Create the media query matcher

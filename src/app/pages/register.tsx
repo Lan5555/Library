@@ -8,10 +8,10 @@ import 'react-toastify/ReactToastify.css'  // Import the Toastify CSS
 import Notify from "../hooks/notification";
 
 /* eslint-disable @next/next/no-img-element */
-interface props{
+interface Props{
     onclick: (condition: boolean) => void
 }
-const Register:React.FC<props> = ({onclick}) => {
+const Register:React.FC<Props> = ({onclick}) => {
     const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
   useEffect(() => {
     // Create the media query matcher
@@ -78,9 +78,9 @@ const Register:React.FC<props> = ({onclick}) => {
                 }else{
                 const result = await addUser(formData);
                 if(result.success){
-                    showToast(`Welcome: ${formData.name}`);
+                    showToast('Success');
                     setTimeout(() => {
-                    router.push('/pages/homepage');
+                    router.push('/pages/endtime');
                     }, 4000);
                 }else{
                     showToast(`Oops some thing went wrong`,'warning');

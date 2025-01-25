@@ -1,9 +1,9 @@
 import { ReactNode } from "react"
 
-interface props{
+interface Props{
     children:ReactNode
 }
-const Center:React.FC<props> = ({children}) => {
+const Center:React.FC<Props> = ({children}) => {
     return <div className="flex justify-center items-center">
         {children}
     </div>
