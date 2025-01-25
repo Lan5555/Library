@@ -88,8 +88,8 @@ const Login: React.FC<Props> = ({ onclick }) => {
     <div className="flex flex-col justify-evenly items-center mt-10 w-full">
     
       <img src="/avatar/login.png" alt="login" className="h-60 w-60" />
-      <h1 className="font-bold text-2xl text-blue-700 relative top-12" style={style}>Login here</h1>
-      <form onSubmit={handleLogin} className="mt-20 flex flex-col gap-7 w-full p-7">
+      <h1 className="font-bold text-2xl text-blue-700 relative top-6" style={style}>Login here</h1>
+      <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7">
         <input
           value={formData.email}
           type="email"
