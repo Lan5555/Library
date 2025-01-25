@@ -102,7 +102,7 @@ const Payment: React.FC = () => {
       }
     };
     fetchData();
-  }, [user?.uid]);
+  }, [user?.uid])
 
   if (!expiryDate) return <Center><CircularProgress /></Center>;
 
