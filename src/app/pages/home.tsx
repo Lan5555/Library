@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
 import Center from '../hooks/center';
 import { CircularProgress } from '@mui/material';
+import Login from './login';
 
 
 interface CourseProps {
@@ -117,7 +118,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     });
   };
   
-
+  const [backToLogIn,setBackToLogin] = useState(false);
   useEffect(() => {
     const fetchUserLevelAndCourses = async () => {
       setLoading(true);
@@ -183,10 +184,13 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   }
 
   if (error) {
-    return <div className='p-3'>Error: {error}</div>;
+    setTimeout(()=>{
+      window.location.href = "/#";
+    },3000);
+    return <div className='p-3'>Error: {error} falling back to log in page.</div>;
   }
   
-  return (
+  return !backToLogIn ? (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
       <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow">
         <div className="flex gap-5">
@@ -200,10 +204,11 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         </div>
       </div>
 
-      <div className="flex flex-start ml-5">
+      <div className="flex flex-start ml-5 flex-col w-[90%]">
         <h2 className="text-left font-bold">
           <FontAwesomeIcon icon={faStarHalfAlt} /> Your courses
         </h2>
+        <small className='animate-pulse'>Make sure you select a course before going to lib.</small>
       </div>
 
       <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10">
@@ -243,7 +248,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         </div>
       )}
     </div>
-  );
+  ):(<Login onclick={()=>{}}/>);
 };
 
 export default Home;

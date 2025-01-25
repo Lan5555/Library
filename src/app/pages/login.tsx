@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import Notify from "../hooks/notification";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+import Register from "./register";
 
 
 
@@ -81,8 +82,9 @@ const Login: React.FC<Props> = ({ onclick }) => {
     }
   };
 
+    const [register, setRegister] = useState(false);
 
-  return  mediaQuery === 'mobile' ? (
+  return  mediaQuery === 'mobile' && !register ? (
     <div className="flex flex-col justify-evenly items-center mt-10 w-full">
     
       <img src="/avatar/login.png" alt="login" className="h-60 w-60" />
@@ -111,11 +113,15 @@ const Login: React.FC<Props> = ({ onclick }) => {
           {loading ? <CircularProgress /> : 'Sign in'}
         </button>
       </form>
-      <a className="animate-pulse text-blue-700" onClick={() => onclick(true)}>Create an account</a>
+      <a className="animate-pulse text-blue-700 select-none" onClick={() =>{
+       onclick(true);
+       setRegister(true);
+      }
+    }>Create an account</a>
       <h3 className="text-center mb-10">&copy; Computer Science Department. <br /> University of Jos.</h3>
       <ToastContainer aria-label="Toast messages" />
     </div>
-  ):(<Notify message="Desktop version coming soon!"></Notify>)
+  ): mediaQuery === 'mobile' && register ? (<Register onclick={()=>{}}/>) : (<Notify message="Desktop version coming soon!"></Notify>);
 };
 
 export default Login;

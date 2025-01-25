@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import 'react-toastify/ReactToastify.css'  // Import the Toastify CSS
 import Notify from "../hooks/notification";
+import Login from "./login";
 
 /* eslint-disable @next/next/no-img-element */
 interface Props{
@@ -51,8 +52,11 @@ const Register:React.FC<Props> = ({onclick}) => {
     const levels:number[] = [
         100,200
     ];
+    const [login, setLogin] = useState(false);
+
     const [isClicked, setClicked] = useState(true);
         const handleClick = () => {
+            setLogin(true);
             setClicked(false);
             onclick(isClicked);
         }
@@ -65,7 +69,8 @@ const Register:React.FC<Props> = ({onclick}) => {
         const {addUser,loading,error,success} = useCreateUser();
         const [formData, setFormData] = useState({name: "",  email: "", password: "",confirm:'', level: 100});
         const router = useRouter();
-    return mediaQuery === 'mobile' ? (
+        
+    return mediaQuery === 'mobile' && !login ? (
         <div className="flex flex-col justify-evenly items-center mt-10 w-full">
             <img src="/avatar/register.png" alt="photo" className="h-60 w-60"></img>
             <h1 className="mt-10 font-bold text-2xl text-blue-600">Create Account</h1>
@@ -112,10 +117,10 @@ const Register:React.FC<Props> = ({onclick}) => {
                 </select>
                 <button className="text-white bg-blue-700 p-3 rounded-xl shadow-xl mt-10" type="submit">{loading ? <CircularProgress/> : 'Sign up'}</button>
             </form>
-            <a className="mb-4 text-blue-500" onClick={handleClick}>Already have an account?</a>
+            <a className="mb-4 text-blue-500 select-none" onClick={handleClick}>Already have an account?</a>
             <h3 className="text-center mb-10">&copy;Computer science department.<br></br>University of Jos.</h3>
             <ToastContainer aria-label={undefined}/>
         </div>
-    ):(<Notify message="Desktop version coming soon"></Notify>);
+    ):mediaQuery === 'mobile' && login ? (<Login onclick={()=>{}}/>): (<Notify message="Desktop version coming soon"></Notify>)
 }
 export default Register;

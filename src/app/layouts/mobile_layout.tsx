@@ -3,7 +3,7 @@ import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faGear, faHome,  faSignOut,  faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
-import Login from "../pages/login";
+
 
 interface Props {
     children?: ReactNode;
@@ -23,21 +23,22 @@ export const MobileLayout: React.FC<Props> = ({
     read,
 }) => {
     const [value, setValue] = useState(0);
-    const [login,setLogin] = useState(false);
     const [popper, showPop] = useState(false);
     const Pop = () => {
         return(
-            <div className="rounded p-3 w-auto h-auto flex justify-center items-center gap-3 shadow-xll fixed top-5 right-20 z-40" onClick={()=>setLogin(true)}>
+            <div className="rounded p-3 w-auto h-auto flex justify-center items-center gap-3 shadow-xll fixed top-5 right-20 z-40" onClick={()=>{
+                window.location.href = '/#';
+            }}>
                     <p className="text-black">Log out</p>
                     <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
             </div>
         )
     }
-    return !login ? (
+    return (
         <>
             <div className="w-full h-screen flex flex-col">
                 {/* Header */}
-                <div className="fixed top-0 w-full h-16 p-2 flex justify-between bg-white z-20">
+                <div className="fixed top-0 w-full h-12 p-2 flex justify-between bg-white z-20">
                     <h1 className="text-xl font-bold mt-3">
                         <FontAwesomeIcon icon={faBook} color="blue" className="ml-5" />
                           Library
@@ -105,7 +106,7 @@ export const MobileLayout: React.FC<Props> = ({
                 {popper && <Pop/>}
             </div>
         </>
-    ):<Login onclick={()=>{}}/>;
+    );
 };
 
 export default MobileLayout;
