@@ -113,7 +113,7 @@ const Register:React.FC<Props> = ({onclick}) => {
                 <button className="text-white bg-blue-700 p-3 rounded-xl shadow-xl mt-10" type="submit">{loading ? <CircularProgress/> : 'Sign up'}</button>
             </form>
             <a className="mb-4 text-blue-500" onClick={handleClick}>Already have an account?</a>
-            <h3 className="text-center">&copy;Computer science department.<br></br>University of Jos.</h3>
+            <h3 className="text-center mb-10">&copy;Computer science department.<br></br>University of Jos.</h3>
             <ToastContainer aria-label={undefined}/>
         </div>
     ):(<Notify message="Desktop version coming soon"></Notify>);

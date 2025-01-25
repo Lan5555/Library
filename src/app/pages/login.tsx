@@ -112,7 +112,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
         </button>
       </form>
       <a className="animate-pulse text-blue-700" onClick={() => onclick(true)}>Create an account</a>
-      <h3 className="text-center">&copy; Computer Science Department. <br /> University of Jos.</h3>
+      <h3 className="text-center mb-10">&copy; Computer Science Department. <br /> University of Jos.</h3>
       <ToastContainer aria-label="Toast messages" />
     </div>
   ):(<Notify message="Desktop version coming soon!"></Notify>)

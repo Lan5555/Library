@@ -137,7 +137,7 @@ const CheckTime:React.FC = () => {
                     });
                 }}>₦200</button>
             </div>
-            <footer className="mt-28">
+            <footer className="mt-28 mb-10">
             <p className="text-center">&copy;Department of Computer Science<br></br>University of Jos.</p>
             </footer>
             <ToastContainer aria-label={undefined}></ToastContainer>

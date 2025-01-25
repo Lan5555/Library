@@ -206,7 +206,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         </h2>
       </div>
 
-      <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center">
+      <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10">
         {courses.map((course, index) => (
           <div
             key={index}

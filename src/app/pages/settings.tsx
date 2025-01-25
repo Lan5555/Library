@@ -125,7 +125,7 @@ export const Settings:React.FC = () => {
             message={view ? 'Switched to edit mode' : 'Switched to static mode'}
             onClose={handleClose}
             ></Snackbar>
-            <button className="rounded p-2 bg-slate-500 relative left-3 text-white hover:bg-gray-200" onClick={() => setCondition(true)}>Mode</button>
+            <button className="rounded p-2 bg-slate-500 relative left-3 text-white hover:bg-gray-200 mb-20" onClick={() => setCondition(true)}>Mode</button>
            {condition && (<div className="flex justify-center items-center w-auto h-auto p-4 rounded bg-blue-600" style={{
             position:'absolute',
             top:'50%',
