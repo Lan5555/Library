@@ -192,14 +192,25 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   
   return !backToLogIn ? (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
-      <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow">
+      <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow" style={{
+        backgroundImage:'url("/avatar/book2.jpeg")',
+        backgroundPosition:'center',
+        backgroundSize:'cover',
+        backgroundRepeat:'no-repeat',
+        border:'1px solid rgba(0,0,0,0.2)'
+      }}>
         <div className="flex gap-5">
-          <div className="rounded-full p-2 flex justify-center items-center bg-gradient-to-tr h-20 w-20">
-            <FontAwesomeIcon icon={faComputer} style={{ height: '30px' }} className="text-white" />
+          <div className="rounded-full p-2 flex justify-center items-center bg-gradient-to-tr h-20 w-20" style={{
+            backgroundImage:'url("/avatar/man.png")',
+            backgroundPosition:'center',
+            backgroundSize:'cover',
+            backgroundRepeat:'no-repeat',
+            border:'1px solid rgba(0,0,0,0.2)'
+          }}>
           </div>
           <div className="flex flex-col gap-2">
-            <h1 className="text-white font-bold opacity-65">Your current level: {level}</h1>
-            <p className="text-white opacity-65">Courses Available: {courses.length}</p>
+            <h1 className="text-black font-bold opacity-65">Your current level: {level}</h1>
+            <p className="text-black opacity-65">Courses Available: {courses.length}</p>
           </div>
         </div>
       </div>
@@ -222,7 +233,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             backgroundPosition:'center',
             backgroundSize:'cover',
             backgroundRepeat:'no-repeat',
-            border:'1px solid rgba(0,0,0,0.2'
+            border:'1px solid rgba(0,0,0,0.2)'
            }}>
             <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-1" onClick={() => {}} />
             <FontAwesomeIcon icon={faBookAtlas} color="blue" style={{ height: '40px' }} className="relative left-5" />

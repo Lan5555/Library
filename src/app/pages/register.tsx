@@ -91,8 +91,8 @@ const Register:React.FC<Props> = ({onclick}) => {
         
     return mediaQuery === 'mobile' && !login ? (
         <div className="flex flex-col justify-evenly items-center mt-10 w-full">
-            <img src="/avatar/register.png" alt="photo" className="h-60 w-60"></img>
-            <h1 className="mt-10 font-bold text-2xl text-blue-600">Create Account</h1>
+            <img src="/avatar/register.png" alt="photo" className="h-52 w-52"></img>
+            <h1 className="mt-4 font-bold text-2xl text-blue-600">Create Account</h1>
             <p className="relative top-5 text-center">Create an account<br></br>In order to access the documents</p>
 
             <form className="mt-10 flex flex-col gap-7 w-full p-7" onSubmit={async(e:React.FormEvent)=>{
@@ -115,20 +115,20 @@ const Register:React.FC<Props> = ({onclick}) => {
                 <input type="email"
                 value={formData.email}
                 onChange={(e)=> setFormData({...formData, email:e.target.value})}
-                 placeholder="Email" className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
+                 placeholder="Email" className="w-full p-3 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
                 <input
                 value={formData.password}
                 onChange={(e)=> setFormData({...formData, password:e.target.value})}
-                 placeholder="Password" type="password" className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
+                 placeholder="Password" type="password" className="w-full p-3 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
                 <input 
                 value={formData.confirm}
                 type="password"
                 onChange={(e)=> setFormData({...formData,confirm:e.target.value})}
-                placeholder="Confirm Password" className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
+                placeholder="Confirm Password" className="w-full p-3 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
                 <input 
                 value={formData.name}
                 onChange={(e)=>setFormData({...formData, name:e.target.value})}
-                 placeholder="NickName" className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
+                 placeholder="NickName" className="w-full p-3 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
                  <label htmlFor="set" className="relative left-2">Your current level</label>
                 <select onChange={(e) => setFormData({...formData,level:parseInt(e.target.value)})} className="shadow-xll p-3 rounded-lg bg-white" id="set" required>
                     {levels.map((element,index) => 

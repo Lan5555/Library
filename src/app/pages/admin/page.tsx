@@ -171,7 +171,7 @@ const Admin:React.FC = () => {
             <form className="flex justify-evenly items-center flex-col w-full gap-5" onSubmit={async(event)=>{
                 event.preventDefault();
                 if(level === 100){
-                    const state = await setData2(`links${level}`);
+                    const state = await setData2(`links:${level}`);
                     if(state.success){
                         showToast('Success');
                     }

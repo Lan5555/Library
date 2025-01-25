@@ -95,7 +95,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
           type="email"
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="Email"
-          className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow"
+          className="w-full p-3 bg-blue-100 rounded text-black placeholder-black shadow"
           required
         />
         <input
@@ -103,7 +103,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
           type="password"
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           placeholder="Password"
-          className="w-full p-5 bg-blue-100 rounded-xl text-black placeholder-black shadow"
+          className="w-full p-3 bg-blue-100 rounded text-black placeholder-black shadow"
           required
         />
         <div className="flex w-full justify-end p-2">
