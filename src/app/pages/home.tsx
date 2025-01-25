@@ -69,7 +69,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         showToast('Oops, something went wrong.', 'error');
       }
     } else {
-      showToast('User not authenticated.', 'warning');
+      showToast('User not authenticated! Kindly log in again', 'warning');
     }
   };
 

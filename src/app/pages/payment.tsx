@@ -169,7 +169,7 @@ const Payment: React.FC = () => {
       <h1 className="font-bold mt-5 text-xl opacity-65">Query transaction</h1>
       <h1 className="font-bold mt-5 text-sm text-blue-400">Renew plan</h1>
       <p className="opacity-60 text-xs">Input transaction number from transaction receipt after successful transfer.</p>
-      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-2">
+      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-1">
         <FontAwesomeIcon icon={faListNumeric} />
         <input type="number" className="w-72 p-1 bg-transparent outline-none" placeholder="Input transaction number here" />
       </div>

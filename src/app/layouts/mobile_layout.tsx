@@ -1,8 +1,9 @@
 import { ReactNode, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faGear, faHome,  faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faGear, faHome,  faSignOut,  faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
+import Login from "../pages/login";
 
 interface Props {
     children?: ReactNode;
@@ -22,8 +23,17 @@ export const MobileLayout: React.FC<Props> = ({
     read,
 }) => {
     const [value, setValue] = useState(0);
-
-    return (
+    const [login,setLogin] = useState(false);
+    const [popper, showPop] = useState(false);
+    const Pop = () => {
+        return(
+            <div className="rounded p-3 w-auto h-auto flex justify-center items-center gap-3 shadow-xll fixed top-5 right-20 z-40" onClick={()=>setLogin(true)}>
+                    <p className="text-black">Log out</p>
+                    <FontAwesomeIcon icon={faSignOut}></FontAwesomeIcon>
+            </div>
+        )
+    }
+    return !login ? (
         <>
             <div className="w-full h-screen flex flex-col">
                 {/* Header */}
@@ -32,7 +42,9 @@ export const MobileLayout: React.FC<Props> = ({
                         <FontAwesomeIcon icon={faBook} color="blue" className="ml-5" />
                           Library
                     </h1>
-                    <Avatar className="mr-3 mt-2"/>
+                    <Avatar className="mr-3 mt-2" onClick={()=>{
+                        showPop(prev => !prev);
+                    }}/>
                 </div>
 
                 {/* Content Area */}
@@ -90,9 +102,10 @@ export const MobileLayout: React.FC<Props> = ({
                         <FontAwesomeIcon icon={faReadme} onClick={read} />
                     </Fab>
                 </Box>
+                {popper && <Pop/>}
             </div>
         </>
-    );
+    ):<Login onclick={()=>{}}/>;
 };
 
 export default MobileLayout;
