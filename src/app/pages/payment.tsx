@@ -12,6 +12,8 @@ import Center from "../hooks/center";
 import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 const Payment: React.FC = () => {
   const [expiryDate, setExpireyDate] = useState<Date | null>(null);

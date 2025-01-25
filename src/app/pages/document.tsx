@@ -11,6 +11,8 @@ import { db } from "../../../firebaseConfig"; // Your Firebase DB initialization
 import { query, collection, where, getDocs } from "firebase/firestore"; // Firebase Firestore methods
 import Center from "../hooks/center";
 import { CircularProgress } from "@mui/material";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 interface Props {
   courseName?: string; // courseName passed as prop

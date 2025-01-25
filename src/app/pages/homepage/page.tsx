@@ -18,6 +18,8 @@ import Access from "../access";
 import { getAuth } from "firebase/auth";
 import { useFetchData } from "@/app/hooks/firebase";
 import Notify from "@/app/hooks/notification";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 const Layout: React.FC = () => {
   const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');

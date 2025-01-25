@@ -8,6 +8,8 @@ import 'react-toastify/ReactToastify.css';
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import Notify from "../hooks/notification";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 
 interface Props {

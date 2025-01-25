@@ -10,6 +10,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { getAuth } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 export const Settings:React.FC = () => {
     const handleChange = (e: any) => {

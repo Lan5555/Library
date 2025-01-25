@@ -8,6 +8,8 @@ import { db } from "../../../../firebaseConfig";
 import { CircularProgress } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+
 
 const Admin:React.FC = () => {
 
