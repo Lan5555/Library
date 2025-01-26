@@ -7,7 +7,7 @@ import {useFlutterwave, closePaymentModal} from 'flutterwave-react-v3';
 import { useEffect, useState } from "react";
 import {addDays} from 'date-fns';
 import { getAuth } from "firebase/auth";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, CollectionReference, doc, DocumentData, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "../../../../firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
@@ -18,6 +18,21 @@ import Notify from "@/app/hooks/notification";
 const CheckTime:React.FC = () => {
 
   const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
+  const [userEmail,setUserEmail] = useState('');
+  
+  const fetchEmail = async () => {
+    const currentUser = getAuth().currentUser;
+    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+    const dataRef = await getDocs(queryData);
+    if(!dataRef.empty){
+    const data = dataRef.docs[0].data();
+      setUserEmail(data.email);
+    }
+    
+    }
+    useEffect(() => {
+      fetchEmail();
+    },[]);
     useEffect(() => {
       // Create the media query matcher
       const mobile = window.matchMedia('(max-width: 600px)');
@@ -53,6 +68,8 @@ const CheckTime:React.FC = () => {
       };
     }, []); // Empty dependency array means this effect runs once on mount
   
+      
+        
     const [amount, setAmount] = useState(200);
     const config:any = {
         public_key: process.env.NEXT_PUBLIC_FLUTTER_WAVE_API_KEY,
@@ -61,9 +78,9 @@ const CheckTime:React.FC = () => {
         currency: 'NGN',
         payment_options: 'card,mobilemoney,ussd,banktransfer',
         customer: {
-          email: 'user@gmail.com',
+          email: `${userEmail}`,
            phone_number: '09065590812',
-          name: 'john doe',
+          name: 'Lan enterprices',
         },
         customizations: {
           title: 'Activation',
@@ -146,3 +163,6 @@ const CheckTime:React.FC = () => {
 }
 
 export default CheckTime;
+
+
+

@@ -93,7 +93,7 @@ const Register:React.FC<Props> = ({onclick}) => {
         <div className="flex flex-col justify-evenly items-center mt-10 w-full">
             <img src="/avatar/register.png" alt="photo" className="h-52 w-52"></img>
             <h1 className="mt-4 font-bold text-2xl text-blue-600">Create Account</h1>
-            <p className="relative top-5 text-center">Create an account<br></br>In order to access the documents</p>
+            <p className="relative top-5 text-center text-xs">Create an account<br></br>In order to access the documents</p>
 
             <form className="mt-10 flex flex-col gap-7 w-full p-7" onSubmit={async(e:React.FormEvent)=>{
                 e.preventDefault();

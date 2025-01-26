@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { doc, getDoc, setDoc } from "@firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "@firebase/firestore";
 import { faCalendar, faCalendarWeek, faClock, faListNumeric } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getAuth } from "firebase/auth";
@@ -19,6 +19,23 @@ const Payment: React.FC = () => {
   const [expiryDate, setExpireyDate] = useState<Date | null>(null);
   const [isExpired, setIsExpired] = useState(false);
   const [daysNum, setDatsNum] = useState(14);
+  const [userEmail,setUserEmail] = useState('');
+
+  const fetchEmail = async () => {
+    const currentUser = getAuth().currentUser;
+    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+    const dataRef = await getDocs(queryData);
+    if(!dataRef.empty){
+    const data = dataRef.docs[0].data();
+      setUserEmail(data.email);
+    }
+    
+    }
+    useEffect(() => {
+      fetchEmail();
+    },[]);
+
+
   const [config, setConfig] = useState<any>({
     public_key: process.env.NEXT_PUBLIC_FLUTTER_WAVE_API_KEY,
     tx_ref: Date.now(),
@@ -26,9 +43,9 @@ const Payment: React.FC = () => {
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd,banktransfer',
     customer: {
-      email: 'user@gmail.com',
+      email: `${userEmail}`,
       phone_number: '09065590812',
-      name: 'john doe',
+      name: 'Lan enterprices',
     },
     customizations: {
       title: 'Activation',

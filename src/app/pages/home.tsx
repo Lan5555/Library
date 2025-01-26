@@ -30,6 +30,22 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const [id, setId] = useState<any>(null); // Initially set to null
   const [isExpired, setIsExpired] = useState(false);
   const user = getAuth().currentUser;
+
+  const [userEmail,setUserEmail] = useState('');
+
+  const fetchEmail = async () => {
+    const currentUser = getAuth().currentUser;
+    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+    const dataRef = await getDocs(queryData);
+    if(!dataRef.empty){
+    const data = dataRef.docs[0].data();
+      setUserEmail(data.email);
+    }
+    
+    }
+    useEffect(() => {
+      fetchEmail();
+    },[]);
  
  
   const [config, setConfig] = useState<any>({
@@ -39,9 +55,9 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd,banktransfer',
     customer: {
-      email: 'user@gmail.com',
+      email: `${userEmail}`,
       phone_number: '09065590812',
-      name: 'john doe',
+      name: 'Lan enterprices',
     },
     customizations: {
       title: 'Activation',

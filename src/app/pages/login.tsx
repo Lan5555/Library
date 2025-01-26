@@ -107,7 +107,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
           required
         />
         <div className="flex w-full justify-end p-2">
-          <a className="text-pretty ">Forgotten your password?</a>
+          <a className="text-pretty text-xs">Forgotten your password?</a>
         </div>
         <button type="submit" className="text-white bg-blue-700 p-3 rounded-xl shadow-xl">
           {loading ? <CircularProgress /> : 'Sign in'}
