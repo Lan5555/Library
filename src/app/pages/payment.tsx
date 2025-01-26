@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "@firebase/firestore";
@@ -110,6 +111,32 @@ const Payment: React.FC = () => {
     return null;
   };
 
+  const processPayment = async (newAmount: number, newDays: number) => {
+    setConfig((prevConfig: any) => ({
+      ...prevConfig,
+      customer: { ...prevConfig.customer, email: userEmail },
+      amount: newAmount,
+      newDays,  // Add newDays to config
+    }));
+  };
+
+  useEffect(() => {
+    if (config.newDays !== undefined && config.amount) {
+      // Trigger payment only when config.newDays and amount are set
+      handleFlutterPayment({
+        callback: async (response) => {
+          await addTime(config.newDays);  // Use config.newDays instead of newDays from processPayment
+          setIsExpired(false);
+          closePaymentModal();
+          const updatedExpiryDate = await fetchExpiryDate();
+          setExpireyDate(updatedExpiryDate);
+        },
+        onClose: () => {},
+      });
+    }
+  }, [config]);  // Listen for changes in `config` and trigger payment when necessary
+
+
   useEffect(() => {
     const fetchData = async () => {
       const expiry = await fetchExpiryDate();
@@ -127,20 +154,10 @@ const Payment: React.FC = () => {
 
   const remainingTime = formatDistanceToNow(expiryDate, { addSuffix: true });
 
-  const processPayment = async (newAmount: number, newDays: number) => {
-   
-    setConfig({ ...config, customer:{...config.customer,email:userEmail},amount: newAmount });
-    handleFlutterPayment({
-      callback: async (response) => {
-        await addTime(newDays);
-        setIsExpired(false);
-        closePaymentModal();
-        const updatedExpiryDate = await fetchExpiryDate();
-        setExpireyDate(updatedExpiryDate);
-      },
-      onClose: () => { },
-    });
-  };
+  
+
+  
+  
 
   return (
     <div className="flex flex-col justify-evenly p-5">

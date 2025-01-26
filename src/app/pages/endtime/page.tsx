@@ -34,6 +34,8 @@ const CheckTime:React.FC = () => {
       }
     fetchEmail();
   },[]);
+
+  
     useEffect(() => {
       // Create the media query matcher
       const mobile = window.matchMedia('(max-width: 600px)');
@@ -90,7 +92,8 @@ const CheckTime:React.FC = () => {
           logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
         },
       });
-    
+      
+      
       
       const showToast = (message?: string) => {
         toast.success(message ?? "Nothing passed.", {
