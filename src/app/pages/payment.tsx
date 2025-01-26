@@ -19,23 +19,25 @@ const Payment: React.FC = () => {
   const [expiryDate, setExpireyDate] = useState<Date | null>(null);
   const [isExpired, setIsExpired] = useState(false);
   const [daysNum, setDatsNum] = useState(14);
-  const [userEmail,setUserEmail] = useState('');
+  const [userEmail,setUserEmail] = useState<string>('');
 
-  const fetchEmail = async () => {
-    const currentUser = getAuth().currentUser;
-    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
-    const dataRef = await getDocs(queryData);
-    if(!dataRef.empty){
-    const data = dataRef.docs[0].data();
-      setUserEmail(data.email);
-    }
-    
-    }
+  
     useEffect(() => {
+      const fetchEmail = async () => {
+        const currentUser = getAuth().currentUser;
+        const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+        const dataRef = await getDocs(queryData);
+        if(!dataRef.empty){
+        const data = dataRef.docs[0].data();
+          setUserEmail(data.email);
+          
+        }
+        
+        }
       fetchEmail();
     },[]);
 
-
+  
   const [config, setConfig] = useState<any>({
     public_key: process.env.NEXT_PUBLIC_FLUTTER_WAVE_API_KEY,
     tx_ref: Date.now(),
@@ -43,7 +45,7 @@ const Payment: React.FC = () => {
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd,banktransfer',
     customer: {
-      email: `${userEmail}`,
+      email: 'user@gmail.com',
       phone_number: '09065590812',
       name: 'Lan enterprices',
     },
@@ -126,7 +128,8 @@ const Payment: React.FC = () => {
   const remainingTime = formatDistanceToNow(expiryDate, { addSuffix: true });
 
   const processPayment = async (newAmount: number, newDays: number) => {
-    setConfig({ ...config, amount: newAmount });
+   
+    setConfig({ ...config, customer:{...config.customer,email:userEmail},amount: newAmount });
     handleFlutterPayment({
       callback: async (response) => {
         await addTime(newDays);

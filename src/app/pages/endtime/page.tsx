@@ -20,19 +20,20 @@ const CheckTime:React.FC = () => {
   const [mediaQuery, setMediaQuery] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
   const [userEmail,setUserEmail] = useState('');
   
-  const fetchEmail = async () => {
-    const currentUser = getAuth().currentUser;
-    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
-    const dataRef = await getDocs(queryData);
-    if(!dataRef.empty){
-    const data = dataRef.docs[0].data();
-      setUserEmail(data.email);
-    }
-    
-    }
-    useEffect(() => {
-      fetchEmail();
-    },[]);
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const currentUser = getAuth().currentUser;
+      const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+      const dataRef = await getDocs(queryData);
+      if(!dataRef.empty){
+      const data = dataRef.docs[0].data();
+        setUserEmail(data.email);
+        
+      }
+      
+      }
+    fetchEmail();
+  },[]);
     useEffect(() => {
       // Create the media query matcher
       const mobile = window.matchMedia('(max-width: 600px)');
@@ -71,14 +72,15 @@ const CheckTime:React.FC = () => {
       
         
     const [amount, setAmount] = useState(200);
-    const config:any = {
+
+    const [config,setConfig] = useState<any>({
         public_key: process.env.NEXT_PUBLIC_FLUTTER_WAVE_API_KEY,
         tx_ref: Date.now(),
         amount: amount,
         currency: 'NGN',
         payment_options: 'card,mobilemoney,ussd,banktransfer',
         customer: {
-          email: `${userEmail}`,
+          email: `user@gmail.com`,
            phone_number: '09065590812',
           name: 'Lan enterprices',
         },
@@ -87,7 +89,7 @@ const CheckTime:React.FC = () => {
           description: 'Payment for access to library',
           logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
         },
-      };
+      });
     
       
       const showToast = (message?: string) => {
@@ -143,6 +145,8 @@ const CheckTime:React.FC = () => {
                 <h1 className="font-bold">Information</h1>
                 <p className="text-center">You are required to subscribe before getting your pass, and after two weeks, you will have to resubscribe.</p>
                 <button className="p-2 rounded w-full text-white bg-blue-600 hover:bg-black" onClick={() => {
+                  setConfig({ ...config, customer:{...config.customer,email:userEmail},amount: amount });
+
                     handleFlutterPayment({
                         callback:  (response) => {
                             addTime();

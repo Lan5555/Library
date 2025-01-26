@@ -33,19 +33,20 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
 
   const [userEmail,setUserEmail] = useState('');
 
-  const fetchEmail = async () => {
-    const currentUser = getAuth().currentUser;
-    const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
-    const dataRef = await getDocs(queryData);
-    if(!dataRef.empty){
-    const data = dataRef.docs[0].data();
-      setUserEmail(data.email);
-    }
-    
-    }
-    useEffect(() => {
-      fetchEmail();
-    },[]);
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const currentUser = getAuth().currentUser;
+      const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
+      const dataRef = await getDocs(queryData);
+      if(!dataRef.empty){
+      const data = dataRef.docs[0].data();
+        setUserEmail(data.email);
+        
+      }
+      
+      }
+    fetchEmail();
+  },[]);
  
  
   const [config, setConfig] = useState<any>({
@@ -55,7 +56,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd,banktransfer',
     customer: {
-      email: `${userEmail}`,
+      email: `user@gmail.com`,
       phone_number: '09065590812',
       name: 'Lan enterprices',
     },
@@ -121,7 +122,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const remainingTime = expiryDate ? formatDistanceToNow(expiryDate, { addSuffix: true }) : null;
 
   const processPayment = async (newAmount: number, newDays: number) => {
-    setConfig({ ...config, amount: newAmount });
+    setConfig({ ...config, customer:{...config.customer,email:userEmail},amount: newAmount });
     handleFlutterPayment({
       callback: async (response) => {
         await addTime(newDays);
