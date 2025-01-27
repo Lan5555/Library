@@ -4,7 +4,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ListTile from "../components/list_tile";
 import { faAngleRight, faBook } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { getAuth } from "firebase/auth"; // Firebase Authentication
 import { db } from "../../../firebaseConfig"; // Your Firebase DB initialization
@@ -42,7 +42,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
         const userLevel = userData.level;
         setLevel(userLevel); // Set the user level state
 
-
+        // Fetch courses and links from the Firestore collections
         const coursesQuery = await getDocs(collection(db, `level:${userLevel}`));
         const linksQuery = await getDocs(collection(db, `links:${userLevel}`));
 
@@ -55,21 +55,13 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
             if (data) {
               const code = data.courses.code;
               const courseTitles = data.courses.courseTitles;
-
               const courseNames = courseTitles ? Object.values(courseTitles) : [];
-              newCourses.push({
-                code,
-                courseNames, // Array of course titles
-              });
+              newCourses.push({ code, courseNames });
             } else {
               console.warn('Document data is undefined or empty');
             }
           });
-        } else {
-          console.warn('No documents found for this level');
         }
-
-        setCourses(newCourses);
 
         if (!linksQuery.empty) {
           linksQuery.forEach((doc) => {
@@ -77,20 +69,15 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
             if (data) {
               const codeName = data.links.code;
               const courseLinks = data.links.respectiveLinks;
-
               const linksArray = courseLinks ? Object.values(courseLinks) : [];
-              newLinks.push({
-                codeName,
-                linksArray, // Array of links for each course
-              });
+              newLinks.push({ codeName, courseLinks, linksArray });
             } else {
               console.warn('Document data is undefined or empty');
             }
           });
-        } else {
-          console.warn('No documents found for this level');
         }
 
+        setCourses(newCourses);
         setLinks(newLinks);
       } else {
         console.error('User data not found');
@@ -100,9 +87,23 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   };
 
+  const handleScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
   }, []); 
+
+  useEffect(() => {
+    if (courses.length > 0) {
+      handleScroll('position');
+    }
+  }, [courses]); // This triggers when courses are updated
+
 
   const showToast = (message?: string) => {
     toast.success(message ?? "Nothing passed.", {
@@ -111,47 +112,50 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
-      
     });
   };
 
-  // Filter courses based on the courseName prop
-  const filteredCourses = courses.filter(course => course.code === courseName);
+  
 
   // Handle link click and store the selected course in localStorage
   const handleLinkClick = (courseIndex: number, titleIndex: number) => {
     const selectedCourse = courses[courseIndex];
     const selectedLink = links[courseIndex]?.linksArray[titleIndex];
-
     if (selectedCourse && selectedLink) {
       // Store the selected course and its link in localStorage
       const selectedData = selectedLink;
-      localStorage.setItem('link',selectedData);
-      showToast('Course ready now clicked the icon below to read!')
+      localStorage.setItem('link', selectedData);
+      showToast('Course ready, now click the icon below to read!');
     }
   };
 
-  // Render the selected course's titles and links
   return (
     <div className="h-auto w-auto flex flex-col gap-5">
-      {filteredCourses.length > 0 ? (
-        filteredCourses.map((course, courseIndex) => (
-          course.courseNames.map((title: string, titleIndex: number) => (
-            <div className="p-4" key={titleIndex} onClick={() => handleLinkClick(courseIndex, titleIndex)}>
-              <ListTile
-                leading={<FontAwesomeIcon icon={faBook} color="blue" style={{ height: '25px' }} />}
-                title={title} // Display course title
-                subtitle={'Click to view'}
-                trailing={<FontAwesomeIcon icon={faAngleRight} />}
-                // Handle link click
-              />
-            </div>
-          ))
+      {courses.length > 0 ? (
+        courses.map((course, courseIndex) => (
+          course.courseNames.map((title: string, titleIndex: number) => {
+            // Check if this course is the one that should be highlighted (if the courseName is provided)
+            const isSelected = courseName && course.code === courseName;
+            return (
+              <div
+                className={`p-4 ${isSelected ? 'bg-blue-100' : ''}`} // Optional: apply a background if the course is selected
+                key={titleIndex}
+                onClick={() => handleLinkClick(courseIndex, titleIndex)}
+               id="position">
+                <ListTile
+                  leading={<FontAwesomeIcon icon={faBook} color="blue" style={{ height: '25px' }} />}
+                  title={title} // Display course title
+                  subtitle={'Click to view'}
+                  trailing={<FontAwesomeIcon icon={faAngleRight} />}
+                />
+              </div>
+            );
+          })
         ))
       ) : (
         <div className="flex justify-center items-center h-full">
           <Center>
-            <CircularProgress/>
+            <CircularProgress />
           </Center>
         </div>
       )}

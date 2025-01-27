@@ -26,7 +26,7 @@ const Admin:React.FC = () => {
     }
 
     const handleInputChange2 = (index:number,e: ChangeEvent<HTMLInputElement>) => {
-        const newValues = {...links,[index]: e.target.value.replace('view?usp=drive_link','preview')};
+        const newValues = {...links,[index]: e.target.value.replace('/view?', '/preview?').split('?')[0]};
         setLinks(newValues);
     }
     const renderInputs = () => {

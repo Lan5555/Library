@@ -35,6 +35,7 @@ export const ReadMode: React.FC = () => {
                 width="100%"
                 src={iframeSrc}
                 title="Embedded Content"
+                allow="autoplay"
             ></iframe>
         </div>
     );
