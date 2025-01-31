@@ -76,7 +76,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
               console.warn('Document data is undefined or empty');
             }
           });
-          newLinks.reverse();
+          
         }
 
         setCourses(newCourses);
