@@ -4,6 +4,7 @@ import { useState } from "react"
 import Login from "./pages/login";
 import Register from "./pages/register";
 import CheckTime from "./pages/endtime/page";
+import PayDues from "./pages/check_payment";
 //import Admin from "./pages/admin/page";
 
 const Access = () => {
@@ -15,7 +16,7 @@ const Access = () => {
         setState(condition);
     }
     return (
-        //<CheckTime/>
+        //<PayDues/>
         !currentState ? <Login onclick={handleClick}></Login> : <Register onclick={HandleClick2}/>
     )
 }

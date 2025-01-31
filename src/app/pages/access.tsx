@@ -10,7 +10,7 @@ const Access = () => {
     };
 
     return (
-        !currentState ? <Login onclick={handleToggle} /> : <Register onclick={handleToggle} />
+       !currentState ? <Login onclick={handleToggle} /> : <Register onclick={handleToggle} />
     );
 };
 
