@@ -47,7 +47,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
         const linksQuery = await getDocs(collection(db, `links:${userLevel}`));
 
         const newCourses: any[] = [];
-        const newLinks: any[] = [].reverse();
+        const newLinks: any[] = [];
         
 
         if (!coursesQuery.empty) {
@@ -76,6 +76,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
               console.warn('Document data is undefined or empty');
             }
           });
+          newLinks.reverse();
         }
 
         setCourses(newCourses);
