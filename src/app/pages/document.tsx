@@ -89,12 +89,13 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   };
 
-  const handleScroll = (id: string) => {
-    const element = document.getElementById(id);
+  const handleScroll = (courseIndex: number, titleIndex: number) => {
+    const element = document.getElementById(`course-${courseIndex}-title-${titleIndex}`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+  
 
   useEffect(() => {
     fetchUserData();
@@ -102,10 +103,11 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
 
   useEffect(() => {
     if (courses.length > 0) {
-      handleScroll('position');
+      // Scroll to the first course and title (you can change this logic based on your need)
+      handleScroll(0, 0); // Scroll to the first course and title
     }
   }, [courses]); // This triggers when courses are updated
-
+  
 
   const showToast = (message?: string) => {
     toast.success(message ?? "Nothing passed.", {
@@ -143,7 +145,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
                 className={`p-4 ${isSelected ? 'bg-blue-100' : ''}`} // Optional: apply a background if the course is selected
                 key={titleIndex}
                 onClick={() => handleLinkClick(courseIndex, titleIndex)}
-               id="position">
+               id={`course-${courseIndex}-title-${titleIndex}`}>
                 <ListTile
                   leading={<FontAwesomeIcon icon={faBook} color="blue" style={{ height: '25px' }} />}
                   title={title} // Display course title
