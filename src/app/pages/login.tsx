@@ -93,33 +93,43 @@ const Login: React.FC<Props> = ({ onclick }) => {
       <img src="/avatar/login.png" alt="login" className="h-60 w-60" />
       <h1 className="font-bold text-2xl text-blue-700 relative top-6" style={style}>Login here</h1>
       <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7">
-        <div className="flex justify-between bg-blue-100 rounded shadow">
-          <div className="flex gap-5 items-center">
-            <FontAwesomeIcon icon={faMailBulk} className="relative left-3"></FontAwesomeIcon>
-        <input
-          value={formData.email}
-          type="email"
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          placeholder="Email"
-          className="w-72 p-3 bg-blue-100 rounded text-black placeholder-black outline-none"
-          required
-        />
-        </div>
-        </div>
-        <div className="w-full rounded flex justify-between items-center bg-blue-100 shadow">
-          <div className="flex items-center gap-3">
-          <FontAwesomeIcon icon={faLock} className="relative left-3"></FontAwesomeIcon>
-        <input
-          value={formData.password}
-          type={!isVisible ? "password" : "text"}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          placeholder="Password"
-          className="w-72 p-3 rounded text-black placeholder-black outline-none bg-blue-100"
-          required
-        />
-        </div>
-        <FontAwesomeIcon icon={!isVisible ? faEyeSlash : faEye} className="relative right-3" onClick={() => setIsvisble(prev => !prev)}></FontAwesomeIcon>
-        </div>
+      
+<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-5">
+  <FontAwesomeIcon
+    icon={faMailBulk}
+    className="absolute left-3 text-gray-600"  // You can adjust the size here
+  />
+  <input
+    value={formData.email}
+    type="email"
+    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+    placeholder="Email"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none"
+    required
+  />
+</div>
+
+
+<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-5">
+  <FontAwesomeIcon
+    icon={faLock}
+    className="absolute left-3 text-gray-600"
+  />
+  <input
+    value={formData.password}
+    type={!isVisible ? "password" : "text"}
+    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+    placeholder="Password"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none"
+    required
+  />
+  <FontAwesomeIcon
+    icon={!isVisible ? faEyeSlash : faEye}
+    className="absolute right-3 text-gray-600 cursor-pointer"
+    onClick={() => setIsvisble((prev) => !prev)} // Toggle visibility
+  />
+</div>
+
 
         <div className="flex w-full justify-end p-2">
           <a className="text-pretty text-xs">Forgotten your password?</a>
