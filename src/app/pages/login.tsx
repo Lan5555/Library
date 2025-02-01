@@ -10,6 +10,9 @@ import { CircularProgress } from "@mui/material";
 import Notify from "../hooks/notification";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
 import Register from "./register";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faLock, faMailBulk, faMailForward, faSlash } from "@fortawesome/free-solid-svg-icons";
+
 
 
 
@@ -75,7 +78,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
     e.preventDefault();
     const result = await signIn(formData);
     if (result.success) {
-      showToast(`Welcome, ${user?.displayName || 'User'}`);
+      showToast(`Welcome, ${user?.name || 'User'}`);
         router.push('pages/homepage');
     } else {
       showToast('Oops, something went wrong.', 'warning');
@@ -83,29 +86,41 @@ const Login: React.FC<Props> = ({ onclick }) => {
   };
 
     const [register, setRegister] = useState(false);
-
+    const [isVisible, setIsvisble] = useState(false);
   return  mediaQuery === 'mobile' && !register ? (
     <div className="flex flex-col justify-evenly items-center mt-10 w-full">
     
       <img src="/avatar/login.png" alt="login" className="h-60 w-60" />
       <h1 className="font-bold text-2xl text-blue-700 relative top-6" style={style}>Login here</h1>
       <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7">
+        <div className="flex justify-between bg-blue-100 rounded shadow">
+          <div className="flex gap-5 items-center">
+            <FontAwesomeIcon icon={faMailBulk} className="relative left-3"></FontAwesomeIcon>
         <input
           value={formData.email}
           type="email"
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="Email"
-          className="w-full p-3 bg-blue-100 rounded text-black placeholder-black shadow"
+          className="w-72 p-3 bg-blue-100 rounded text-black placeholder-black outline-none"
           required
         />
+        </div>
+        </div>
+        <div className="w-full rounded flex justify-between items-center bg-blue-100 shadow">
+          <div className="flex items-center gap-3">
+          <FontAwesomeIcon icon={faLock} className="relative left-3"></FontAwesomeIcon>
         <input
           value={formData.password}
-          type="password"
+          type={!isVisible ? "password" : "text"}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           placeholder="Password"
-          className="w-full p-3 bg-blue-100 rounded text-black placeholder-black shadow"
+          className="w-72 p-3 rounded text-black placeholder-black outline-none bg-blue-100"
           required
         />
+        </div>
+        <FontAwesomeIcon icon={!isVisible ? faEyeSlash : faEye} className="relative right-3" onClick={() => setIsvisble(prev => !prev)}></FontAwesomeIcon>
+        </div>
+
         <div className="flex w-full justify-end p-2">
           <a className="text-pretty text-xs">Forgotten your password?</a>
         </div>

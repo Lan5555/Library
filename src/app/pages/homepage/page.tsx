@@ -35,6 +35,13 @@ const Layout: React.FC = () => {
   useEffect(() => {
     fetchUserData({ collectionName: "users" });
   //  data.map((user) => {
+
+
+
+
+
+
+  
   //   alert(user.name)
   //  })
     
