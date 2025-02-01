@@ -89,12 +89,18 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   };
 
-  const handleScroll = (courseIndex: number, titleIndex: number) => {
-    const element = document.getElementById(`course-${courseIndex}-title-${titleIndex}`);
+  const handleScroll = () => {
+    const elementId = `course`;
+    console.log(`Scrolling to element with ID: ${elementId}`);
+    const element = document.getElementById(elementId);
     if (element) {
+      console.log(`Found element: ${elementId}`);
       element.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      console.error(`Element with ID ${elementId} not found`);
     }
   };
+  
   
 
   useEffect(() => {
@@ -103,8 +109,10 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
 
   useEffect(() => {
     if (courses.length > 0) {
-      // Scroll to the first course and title (you can change this logic based on your need)
-      handleScroll(0, 0); // Scroll to the first course and title
+      // Use setTimeout to delay the scroll just to give the DOM time to render
+      setTimeout(() => {
+        handleScroll(); // Scroll to the first course and title
+      }, 1000); // Delay in milliseconds (adjust if needed)
     }
   }, [courses]); // This triggers when courses are updated
   
@@ -145,7 +153,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
                 className={`p-4 ${isSelected ? 'bg-blue-100' : ''}`} // Optional: apply a background if the course is selected
                 key={titleIndex}
                 onClick={() => handleLinkClick(courseIndex, titleIndex)}
-               id={`course-${courseIndex}-title-${titleIndex}`}>
+               id={`course`}>
                 <ListTile
                   leading={<FontAwesomeIcon icon={faBook} color="blue" style={{ height: '25px' }} />}
                   title={title} // Display course title
