@@ -1,14 +1,15 @@
 'use client'
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { faBackward, faComputer, faSignIn, faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faBell, faComputer, faSignIn, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { ChangeEvent, use, useEffect, useState } from "react";
 import { db } from "../../../../firebaseConfig";
 import { CircularProgress } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+import { useSaveUser } from "@/app/hooks/firebase";
 
 
 const Admin:React.FC = () => {
@@ -19,6 +20,21 @@ const Admin:React.FC = () => {
     const  [links, setLinks] = useState({});
     const [level, setlevel] = useState(100);
     const [code, setCode] = useState<string>('');
+    const [amount1, setAmount] = useState(0);
+
+    const fetchAmount = async() => {
+        const dataRef = doc(db,'paid','userAmount');
+        const getData = await getDoc(dataRef);
+        
+        if(getData.exists()){
+            const data = getData.data();
+            setAmount(parseInt(data.amount));
+        }
+    }
+
+    useEffect(()=>{
+        fetchAmount();
+    },[]);
 
     const handleInputChange = (index:number,e: ChangeEvent<HTMLInputElement>) => {
         const newValues = {...inputValue,[index]: e.target.value};
@@ -115,14 +131,20 @@ const Admin:React.FC = () => {
         window.scrollTo(0,0);
       };
       const router = useRouter();
+      const [visible, setVisible] = useState(false);
       
     return (
         <div className="flex justify-evenly items-center h-auto w-auto p-5 flex-col gap-10">
             <div className="flex justify-between p-4 items-center mt-10 w-full">
             <h1 className="text-2xl font-bold"><FontAwesomeIcon icon={faComputer}></FontAwesomeIcon> Admin</h1>
+            <div className="flex justify-center items-center gap-5">
+                <FontAwesomeIcon icon={faBell} color="brown" onClick={()=> {
+                    setVisible(prev => !prev);
+                }}></FontAwesomeIcon>
             <FontAwesomeIcon icon={faSignOut} onClick={()=> {
                 router.push('/pages/homepage');
             }}></FontAwesomeIcon>
+            </div>
             </div>
             <p>Upload courses first!</p>
             <div className="shadow-xll w-full h-auto bg-white flex justify-evenly items-center gap-5 flex-col">
@@ -186,7 +208,12 @@ const Admin:React.FC = () => {
             <button className="w-full rounded p-2 text-white bg-black" type="submit">{loading2 ? <CircularProgress/> : 'Submit'}</button>
             </form>
             <ToastContainer aria-label={undefined}/>
+            {visible && <div className="w-52 h-52 shadow-xll absolute top-[17%] right-16 z-20 bg-white flex justify-center items-center flex-col">
+                <h2>Number Paid</h2>
+                <p>{amount1}</p>
+            </div>}
         </div>
+        
     )
 }
 export default Admin;

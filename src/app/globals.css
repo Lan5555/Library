@@ -26,3 +26,15 @@ body {
 .border-l-blue{
   border-left:  3px solid blue;
 }
+
+.slider-container {
+  height: 60px; /* or whatever height you want */
+  width: 40%;
+}
+
+.centered{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

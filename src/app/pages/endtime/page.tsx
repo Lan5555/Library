@@ -13,6 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
 import { useRouter } from "next/navigation";
 import Notify from "@/app/hooks/notification";
+import { useSaveUser } from "@/app/hooks/firebase";
 
 
 const CheckTime:React.FC = () => {
@@ -132,6 +133,8 @@ const CheckTime:React.FC = () => {
         showToast2('User not authenticated');
         }
       }
+
+  const { amount:amoun1, saveUserAmount } = useSaveUser();
    
       const router = useRouter();
     return mediaQuery === 'mobile' ? (
@@ -155,10 +158,12 @@ const CheckTime:React.FC = () => {
                             addTime();
                             router.push('/pages/homepage')
                             closePaymentModal();
+                            saveUserAmount();
                         },
                         onClose: () => {},
                         
                     });
+                    
                 }}>₦200</button>
             </div>
             <footer className="mt-28 mb-10">

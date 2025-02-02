@@ -13,6 +13,8 @@ import 'react-toastify/ReactToastify.css';
 import Center from '../hooks/center';
 import { CircularProgress } from '@mui/material';
 import Login from './login';
+import { useSaveUser } from '../hooks/firebase';
+
 
 
 interface CourseProps {
@@ -32,6 +34,8 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const user = getAuth().currentUser;
 
   const [userEmail,setUserEmail] = useState('');
+  const [newCode, setNewCode] = useState(['MTH','GST','CHM','BIO','CSC',]);
+
 
   useEffect(() => {
     const fetchEmail = async () => {
@@ -120,6 +124,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   }, [fetchExpiryDate, user]);
 
   const remainingTime = expiryDate ? formatDistanceToNow(expiryDate, { addSuffix: true }) : null;
+  const { amount, saveUserAmount } = useSaveUser();
 
   const processPayment = async (newAmount: number, newDays: number) => {
     setConfig({ ...config, customer:{...config.customer,email:userEmail},amount: newAmount });
@@ -128,13 +133,42 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         await addTime(newDays);
         setIsExpired(false);
         closePaymentModal();
+        saveUserAmount();
         const updatedExpiryDate = await fetchExpiryDate();
         setExpiryDate(updatedExpiryDate);
       },
       onClose: () => { },
     });
+   
   };
-  
+
+  const [index1, setIndex1] = useState(0);
+  const [index2, setIndex2] = useState(0);
+  const [index3, setIndex3] = useState(0);
+
+  useEffect(() => {
+    // Function to generate unique indices
+    const generateUniqueIndices = () => {
+      const indices: number[] = [];
+      while (indices.length < 3) {
+        const randomIndex = Math.floor(Math.random() * newCode.length);
+        // Check if the random index is not already in the array
+        if (!indices.includes(randomIndex)) {
+          indices.push(randomIndex);
+        }
+      }
+      return indices;
+    };
+
+    // Generate the unique indices
+    const [uniqueIndex1, uniqueIndex2, uniqueIndex3] = generateUniqueIndices();
+
+    // Set the indices
+    setIndex1(uniqueIndex1);
+    setIndex2(uniqueIndex2);
+    setIndex3(uniqueIndex3);
+  }, [newCode.length]); // Depend on newCode.length to re-run if it changes
+
   const [backToLogIn,setBackToLogin] = useState(false);
   useEffect(() => {
     const fetchUserLevelAndCourses = async () => {
@@ -179,6 +213,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             });
   
             setCourses(fetchedCourses); // Set the courses (code + titles)
+
           } else {
             setError('No courses found for this level.');
           }
@@ -206,15 +241,23 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     },3000);
     return <div className='p-3'>Error: {error} falling back to log in page.</div>;
   }
+  const settings = {
+    dots:true,
+    infinite:true,
+    speed:500,
+    slidesToShow:1,
+    slidesToScroll:1
+  }
   
+
   return !backToLogIn ? (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
       <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow" style={{
-        backgroundImage:'url("/avatar/book2.jpeg")',
+        backgroundImage:'url("/avatar/bg.jpeg")',
         backgroundPosition:'center',
         backgroundSize:'cover',
         backgroundRepeat:'no-repeat',
-        border:'1px solid rgba(0,0,0,0.2)'
+        //border:'1px solid rgba(0,0,0,0.2)'
       }}>
         <div className="flex gap-5">
           <div className="rounded-full p-2 flex justify-center items-center bg-gradient-to-tr h-20 w-20" style={{
@@ -226,19 +269,33 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
           }}>
           </div>
           <div className="flex flex-col gap-2">
-            <h1 className="text-black font-bold opacity-65">Your current level: {level}</h1>
+            <h1 className="text-black font-extrabold opacity-65">Your current level: {level}</h1>
             <p className="text-black opacity-65">Courses Available: {courses.length}</p>
           </div>
         </div>
       </div>
-
+        <h2 className='font-bold'>Trending courses</h2>
+        <div className='grid gap-4 grid-cols-3 place-items-center'>
+          {Array.from({length:3}).map((_,index) => 
+            <div key={index} className='w-24 shadow-xll rounded bg-white h-16  flex justify-center items-center animate-pulse' style={{
+              backgroundImage:'url("/avatar/book6.jpeg")',
+              backgroundPosition:'center',
+              backgroundSize:'cover',
+              backgroundRepeat:'no-repeat',
+              backdropFilter:'blur(3px)'
+            }}>
+              {
+              index === 0 ? <h2 className='text-white font-bold'>{newCode[index1]}</h2> : index === 1 ? <h2 className='text-white font-bold'>{newCode[index2]}</h2> : <h2 className='text-white font-bold'>{newCode[index3]}</h2>}
+            </div>
+          )}
+        </div>
       <div className="flex flex-start ml-5 flex-col w-[90%]">
         <h2 className="text-left font-bold">
           <FontAwesomeIcon icon={faStarHalfAlt} /> Your courses
         </h2>
-        <small className='animate-pulse'>Make sure you select a course before going to lib.</small>
+        <small className='animate-pulse'>Make sure you select a course before going to the library.</small>
       </div>
-
+    
       <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10">
         {courses.map((course, index) => (
           <div

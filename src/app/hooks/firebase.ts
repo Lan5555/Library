@@ -272,3 +272,40 @@ interface UserData {
   
     return { signIn, loading, error, user };
   };
+
+export const useSaveUser = () => {
+  const [amount, setAmount] = useState<number>(0);
+
+  const saveUserAmount = async () => {
+    const docRef = doc(db, 'paid', 'userAmount'); // Reference to the document in Firestore
+    
+    try {
+      const getData = await getDoc(docRef); // Get the document from Firestore
+
+      if (getData.exists()) {
+        const data = getData.data();
+        if (data && data.amount !== undefined) {
+          setAmount(data.amount); // Set the amount from the document if it exists
+        }
+      } else {
+        console.log('Document does not exist, setting to 0');
+        setAmount(0);
+        
+        // Set the document with initial amount of 0 if it doesn't exist
+        await setDoc(docRef, { amount: 0 }); // Ensure it's saved as an object
+      }
+
+      // Increment the amount by 1
+      await updateDoc(docRef, {
+        amount: amount + 1, // Increment the current amount by 1
+      });
+
+      // Update local state (to reflect the new increment immediately)
+      setAmount((prevAmount) => prevAmount + 1);
+    } catch (e) {
+      console.log('Error while saving user amount:', e);
+    }
+  };
+
+  return { amount, saveUserAmount };
+};

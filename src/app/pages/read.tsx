@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Center from "../hooks/center";
+import { CircularProgress } from "@mui/material";
 
 export const ReadMode: React.FC = () => {
     const [link, setLink] = useState<string>('');
@@ -27,15 +29,25 @@ export const ReadMode: React.FC = () => {
 
     // Use the formatted link for the iframe src
     const iframeSrc = link ? formatLink(link) : 'https://www.404.com';
+    const [loading, setLoading] = useState(true); // State to track loading status
+
+    const handleIframeLoad = () => {
+    setLoading(false); // Set loading to false once iframe has loaded
+    };
 
     return (
+        
         <div style={{ height: '100vh', width: '100%' }}>
+            {loading && <Center>
+            <CircularProgress/>
+            </Center>}
             <iframe
                 height="100%"
                 width="100%"
                 src={iframeSrc}
                 title="Embedded Content"
                 allow="autoplay"
+                onLoad={handleIframeLoad}
             ></iframe>
         </div>
     );

@@ -1,8 +1,14 @@
-import { ReactNode, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ReactNode, useEffect, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faGear, faHome,  faSignOut,  faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
+import { blue } from "@mui/material/colors";
+import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
+import { getAuth } from "firebase/auth";
 
 
 interface Props {
@@ -24,9 +30,24 @@ export const MobileLayout: React.FC<Props> = ({
 }) => {
     const [value, setValue] = useState(0);
     const [popper, showPop] = useState(false);
+    const [name, setName] = useState('');
+
+    const FetchName = async() => {
+        const user = getAuth().currentUser;
+        const queryData = query(collection(db,'users'),where('userId','==',user?.uid,));
+        const dataRef = await getDocs(queryData);
+        const fetchedData:any = dataRef.docs[0].data();
+        if(fetchedData){
+            setName(fetchedData.name);
+            
+        }
+    }
+    useEffect(() => {
+        FetchName();
+    },[]);
     const Pop = () => {
         return(
-            <div className="rounded p-3 w-auto h-auto flex justify-center items-center gap-3 shadow-xll fixed top-5 right-20 z-40" onClick={()=>{
+            <div className="rounded p-3 w-auto h-auto flex justify-center items-center gap-3 shadow-xll fixed top-5 right-20 z-40 bg-white" onClick={()=>{
                 window.location.href = '/#';
             }}>
                     <p className="text-black">Log out</p>
@@ -36,20 +57,26 @@ export const MobileLayout: React.FC<Props> = ({
     }
     return (
         <>
-            <div className="w-full h-screen flex flex-col">
+            <div className="w-full h-screen flex flex-col" style={{
+                backgroundImage:'url("/avatar/bg5.jpg")',
+                backgroundPosition:'center',
+                backgroundSize:'cover',
+                backgroundRepeat:'no-repeat',
+                
+            }}>
                 {/* Header */}
-                <div className="fixed top-0 w-full h-12 p-2 flex justify-between bg-white z-20">
+                <div className="fixed top-0 w-full h-12 p-1 flex justify-between z-20">
                     <h1 className="text-xl font-bold mt-3">
                         <FontAwesomeIcon icon={faBook} color="blue" className="ml-5" />
                           Library
                     </h1>
                     <Avatar className="mr-3 mt-2" onClick={()=>{
                         showPop(prev => !prev);
-                    }}/>
+                    }} sx={{ bgcolor: blue[500] }}>{name[0]}</Avatar>
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-grow mt-20 overflow-y-auto mb-10">
+                <div className="flex-grow mt-16 overflow-y-auto mb-10">
                     <div className="w-full h-full">{children}</div>
                 </div>
 

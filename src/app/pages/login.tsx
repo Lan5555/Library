@@ -84,6 +84,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
       showToast('Oops, something went wrong.', 'warning');
     }
   };
+  
 
     const [register, setRegister] = useState(false);
     const [isVisible, setIsvisble] = useState(false);
@@ -134,7 +135,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
         <div className="flex w-full justify-end p-2">
           <a className="text-pretty text-xs">Forgotten your password?</a>
         </div>
-        <button type="submit" className="text-white bg-blue-700 p-3 rounded-xl shadow-xl">
+        <button type="submit" className="text-white bg-blue-700 p-3 rounded-xl shadow-xl hover:bg-gray-400">
           {loading ? <CircularProgress /> : 'Sign in'}
         </button>
       </form>

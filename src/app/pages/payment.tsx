@@ -7,13 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { db } from "../../../firebaseConfig";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { addDays, formatDistanceToNow } from "date-fns";
 import Center from "../hooks/center";
 import { closePaymentModal, useFlutterwave } from "flutterwave-react-v3";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
+import { useSaveUser } from "../hooks/firebase";
 
 
 const Payment: React.FC = () => {
@@ -79,21 +80,40 @@ const Payment: React.FC = () => {
 
   const handleFlutterPayment = useFlutterwave(config);
   
-  const addTime = async (newDays: number) => {
-    const user = getAuth().currentUser;
-    if (user) {
-      try {
-        const expiryDate = addDays(new Date(), newDays);
-        const userRef = doc(db, 'users', `${user?.uid}`);
-        await setDoc(userRef, { expiry: expiryDate }, { merge: true });
-        showToast('Successful');
-      } catch (e) {
-        showToast2('Oops something went wrong');
+const addTime = async (newDays: number) => {
+  const user = getAuth().currentUser;
+  
+  if (user) {
+    try {
+      // Get the user document reference
+      const userRef = doc(db, 'users', user.uid);
+      
+      // Fetch the current expiry date
+      const docSnap = await getDoc(userRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentExpiry = data?.expiry?.toDate ? data.expiry.toDate() : new Date();
+
+        // Add the new days to the current expiry date
+        const newExpiryDate = addDays(currentExpiry, newDays);
+        
+        // Update the expiry date in the database without overwriting other fields
+        await setDoc(userRef, { expiry: newExpiryDate }, { merge: true });
+
+        showToast('Time added successfully');
+      } else {
+        showToast2('User document does not exist');
       }
-    } else {
-      showToast2('User not authenticated');
+    } catch (e) {
+      showToast2('Oops, something went wrong');
+      console.error(e);
     }
-  };
+  } else {
+    showToast2('User not authenticated');
+  }
+};
+
 
   const router = useRouter();
   const user = getAuth().currentUser;
@@ -111,6 +131,7 @@ const Payment: React.FC = () => {
     return null;
   };
 
+  const { amount, saveUserAmount } = useSaveUser();
   const processPayment = async (newAmount: number, newDays: number) => {
     setConfig((prevConfig: any) => ({
       ...prevConfig,
@@ -128,6 +149,7 @@ const Payment: React.FC = () => {
           await addTime(config.newDays);  // Use config.newDays instead of newDays from processPayment
           setIsExpired(false);
           closePaymentModal();
+          saveUserAmount();
           const updatedExpiryDate = await fetchExpiryDate();
           setExpireyDate(updatedExpiryDate);
         },
@@ -153,7 +175,6 @@ const Payment: React.FC = () => {
   if (!expiryDate) return <Center><CircularProgress /></Center>;
 
   const remainingTime = formatDistanceToNow(expiryDate, { addSuffix: true });
-
   
 
   
@@ -181,38 +202,40 @@ const Payment: React.FC = () => {
         <h3 className="font-bold text-white shadow p-2">{isExpired ? 'Expired' : 'Expires'} {remainingTime}</h3>
       </div>
       
-      <h1 className="font-bold mt-5 text-xl opacity-70">Renew plan</h1>
+      <h1 className="font-bold mt-5 opacity-70 text-lg">Renew plan</h1>
       
       <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
-        <h2><FontAwesomeIcon icon={faCalendarWeek} /> Weekly payment</h2>
-        <button
-          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3 text-xs"
+        <h2 className="text-sm"><FontAwesomeIcon icon={faCalendarWeek} /> Weekly payment</h2>
+        <Button
+          variant={'outlined'}
           onClick={() => processPayment(200, 14)}
         >
           NGN 200
-        </button>
+        </Button>
       </div>
 
       <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
-        <h2><FontAwesomeIcon icon={faCalendar} /> Monthly payment</h2>
-        <button
-          className="rounded-3xl bg-gradient-to-tr from-slate-300 to-blue-600 text-black p-3 text-xs"
-          onClick={() => processPayment(400, 28)}
+        <h2 className="text-sm"><FontAwesomeIcon icon={faCalendar} /> Monthly payment</h2>
+        <Button
+        variant={'outlined'}
+        onClick={() => processPayment(400, 28)}
         >
           NGN 400
-        </button>
+        </Button>
       </div>
 
-      <h1 className="font-bold mt-5 text-xl opacity-65">Query transaction</h1>
+      <h1 className="font-bold mt-5 text-sm opacity-65">Query transaction</h1>
       <h1 className="font-bold mt-5 text-sm text-blue-400">Renew plan</h1>
       <p className="opacity-60 text-xs">Input transaction number from transaction receipt after successful transfer.</p>
-      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-1">
+      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-1 mb-4">
         <FontAwesomeIcon icon={faListNumeric} />
         <input type="number" className="w-72 p-1 bg-transparent outline-none" placeholder="Input transaction number here" />
       </div>
-      <button className="w-full rounded-lg p-2 bg-gradient-to-tr from-slate-300 to-blue-600 text-black text-center mt-5 shadow hover:bg-green-300">
+      <Button
+      variant={'contained'}
+       className="w-full mt-10">
         Query
-      </button>
+      </Button>
       
       <ToastContainer aria-label={undefined} />
     </div>

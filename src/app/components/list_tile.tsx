@@ -9,12 +9,16 @@ interface props{
     title?:string,
     subtitle?:string,
     className?: string
+    color?:string
 }
 export const ListTile:React.FC<props> = ({leading,trailing,title,subtitle,
-    className= "h-auto w-full p-5 flex justify-between items-center shadow-xll rounded-2xl"
+    color,
+    className= "h-auto w-full p-5 flex justify-between items-center shadow-xll rounded-2xl bg-white"
 }) => {
     return (
-        <div className={className}>
+        <div className={className} style={{
+            backgroundColor:color
+        }}>
             <div className="flex gap-5 justify-center items-center">
             {leading}
             <div className="flex flex-col">

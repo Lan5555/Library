@@ -159,6 +159,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
                   title={title} // Display course title
                   subtitle={'Click to view'}
                   trailing={<FontAwesomeIcon icon={faAngleRight} />}
+                  color={isSelected ? 'lightblue' : ''}
                 />
               </div>
             );
