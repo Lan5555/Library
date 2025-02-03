@@ -183,7 +183,7 @@ const addTime = async (newDays: number) => {
   return (
     <div className="flex flex-col justify-evenly p-5">
       {isExpired && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-700 bg-opacity-50">
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-20">
           <div className="bg-white p-5 rounded-xl shadow-lg">
             <h2 className="font-bold text-xl text-red-600">Time has expired!</h2>
             <p>Your plan has expired. Please renew to continue.</p>

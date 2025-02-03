@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faGear, faHome,  faSignOut,  faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
 import { blue } from "@mui/material/colors";
-import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import { getAuth } from "firebase/auth";
 
@@ -55,6 +55,38 @@ export const MobileLayout: React.FC<Props> = ({
             </div>
         )
     }
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+    const [isExpired, setIsExpired] = useState(false);
+    
+    const fetchExpiryDate = useCallback(async () => {
+        const user = getAuth().currentUser;
+        if (user?.uid) {
+          const userRef = doc(db, 'users', `${user.uid}`);
+          const docSnap = await getDoc(userRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            return data.expiry.toDate();
+          }
+        }
+        return null;
+      }, []);
+    
+      useEffect(() => {
+        const fetchData = async () => {
+          const expiry = await fetchExpiryDate();
+          if (expiry) {
+            setExpiryDate(expiry);
+            if (new Date() > expiry) {
+                const expired = new Date() > expiry;
+              setIsExpired(expired);
+              
+              
+            }
+          }
+        };
+        fetchData();
+      }, [fetchExpiryDate]);
+
     return (
         <>
             <div className="w-full h-screen flex flex-col" style={{
@@ -81,7 +113,7 @@ export const MobileLayout: React.FC<Props> = ({
                 </div>
 
                 {/* Bottom Navigation Bar */}
-                <Box sx={{ position: 'relative' }}>
+               {!isExpired && <Box sx={{ position: 'relative' }}>
                     <BottomNavigation
                         value={value}
                         onChange={(event, newValue) => setValue(newValue)}
@@ -129,11 +161,11 @@ export const MobileLayout: React.FC<Props> = ({
                     >
                         <FontAwesomeIcon icon={faReadme} onClick={read} />
                     </Fab>
-                </Box>
+                </Box> }
                 {popper && <Pop/>}
             </div>
         </>
     );
 };
 
-export default MobileLayout;
+
