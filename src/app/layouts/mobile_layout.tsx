@@ -55,7 +55,7 @@ export const MobileLayout: React.FC<Props> = ({
             </div>
         )
     }
-  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+    const [expiryDate, setExpiryDate] = useState<Date | null>(null);
     const [isExpired, setIsExpired] = useState(false);
     
     const fetchExpiryDate = useCallback(async () => {
