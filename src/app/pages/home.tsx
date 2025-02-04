@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookAtlas, faComputer, faEllipsis, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
-import { getAuth } from 'firebase/auth';
-import { db } from '../../../firebaseConfig'; // Ensure this path is correct
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '../../../firebaseConfig'; // Ensure this path is correct
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { addDays, formatDistanceToNow } from 'date-fns';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
@@ -14,6 +14,7 @@ import Center from '../hooks/center';
 import { CircularProgress } from '@mui/material';
 import Login from './login';
 import { useSaveUser } from '../hooks/firebase';
+import { unsubscribe } from 'diagnostics_channel';
 
 
 
@@ -31,7 +32,8 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const [daysNum, setDaysNum] = useState(14);
   const [id, setId] = useState<any>(null); // Initially set to null
   const [isExpired, setIsExpired] = useState(false);
-  const user = getAuth().currentUser;
+  //const user = getAuth().currentUser;
+  const [currentUser, setUser] = useState<any>(null);
 
   const [userEmail,setUserEmail] = useState('');
   const [newCode, setNewCode] = useState(['MTH','GST','CHM','BIO','CSC',]);
@@ -40,16 +42,17 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   useEffect(() => {
     const fetchEmail = async () => {
       const currentUser = getAuth().currentUser;
-      const queryData = query(collection(db,'users'), where('userId','==',currentUser?.uid));
-      const dataRef = await getDocs(queryData);
-      if(!dataRef.empty){
-      const data = dataRef.docs[0].data();
-        setUserEmail(data.email);
-        
+      if (currentUser?.uid) {
+        const queryData = query(collection(db, 'users'), where('userId', '==', currentUser.uid));
+        const dataRef = await getDocs(queryData);
+        if (!dataRef.empty) {
+          const data = dataRef.docs[0].data();
+          setUserEmail(data.email);
+        }
       }
-      
-      }
+    };
     fetchEmail();
+   
   },[]);
  
  
@@ -81,10 +84,10 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const handleFlutterPayment = useFlutterwave(config);
 
   const addTime = async (newDays: number) => {
-    if (user) {
+    if (currentUser?.uid) {
       try {
         const expiryDate = addDays(new Date(), newDays);
-        const userRef = doc(db, 'users', `${user.uid}`);
+        const userRef = doc(db, 'users', `${currentUser.uid}`);
         await setDoc(userRef, { expiry: expiryDate }, { merge: true });
         showToast('Payment Successful!', 'success');
       } catch (e) {
@@ -96,8 +99,8 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   };
 
   const fetchExpiryDate = useCallback(async () => {
-    if (user?.uid) {
-      const userRef = doc(db, 'users', `${user.uid}`);
+    if (currentUser?.uid) {
+      const userRef = doc(db, 'users', `${currentUser.uid}`);
       const docSnap = await getDoc(userRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -105,7 +108,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
       }
     }
     return null;
-  }, [user]);
+  }, [currentUser]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,7 +124,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
       }
     };
     fetchData();
-  }, [fetchExpiryDate, user]);
+  }, [fetchExpiryDate]);
 
   const remainingTime = expiryDate ? formatDistanceToNow(expiryDate, { addSuffix: true }) : null;
   const { amount, saveUserAmount } = useSaveUser();
@@ -136,6 +139,9 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         saveUserAmount();
         const updatedExpiryDate = await fetchExpiryDate();
         setExpiryDate(updatedExpiryDate);
+        setTimeout(() => {
+          window.location.reload();
+        },2000);
       },
       onClose: () => { },
     });
@@ -170,66 +176,63 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   }, [newCode.length]); // Depend on newCode.length to re-run if it changes
 
   const [backToLogIn,setBackToLogin] = useState(false);
-  useEffect(() => {
-    const fetchUserLevelAndCourses = async () => {
-      setLoading(true);
-      setError(null); // Reset any previous error
-  
-      try {
-        const user = getAuth().currentUser;
-        if (!user) {
-          setError('User is not authenticated.');
-          return;
-        }
-  
-        // Fetch the user's data using 'userId' from the 'users' collection
-        const userQuery = query(collection(db, 'users'), where('userId', '==', user.uid));
-        const userSnapshot = await getDocs(userQuery);
-  
-        if (!userSnapshot.empty) {
-          const userData = userSnapshot.docs[0].data();
-          const userLevel = userData.level;
-          setLevel(userLevel); // Set user level (100, 200, etc.)
-          
-          // Fetch courses based on the user's level by querying the relevant level collection
-          const coursesQuery = query(collection(db, `level:${userLevel}`)); // Fetch courses from the respective level collection
-          const coursesSnapshot = await getDocs(coursesQuery);
-  
-          if (!coursesSnapshot.empty) {
-            const fetchedCourses = coursesSnapshot.docs.map((doc) => {
-              const data = doc.data();
-              
-              console.log('Fetched Course Data:', data);
-  
-              // Extract the first course code (from the courses object)
-              const courseCode = data.courses ? data.courses.code : ''; // Access the actual code value directly
-              const courseTitles = data.courseTitles || [];
-  
-              if (!courseCode) {
-                console.error('Course code is missing in the document:', data);
-              }
-  
-              return { code: courseCode, titles: courseTitles };
-            });
-  
-            setCourses(fetchedCourses); // Set the courses (code + titles)
 
-          } else {
-            setError('No courses found for this level.');
+    useEffect(() => {
+      const fetchUserLevelAndCourses = async () => {
+        setLoading(true);
+        setError(null); // Reset any previous error
+    
+        try {
+          const auth = getAuth();
+          const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+              setUser(user); // Setting currentUser properly here
+            } else {
+              setError('User Not Authenticated');
+            }
+          });
+    
+          // Wait until user state is set
+          if (currentUser?.uid) {
+            const auth = getAuth().currentUser;
+            const userQuery = query(collection(db, 'users'), where('userId', '==', auth?.uid));
+            const userSnapshot = await getDocs(userQuery);
+    
+            if (!userSnapshot.empty) {
+              const userData = userSnapshot.docs[0].data();
+              const userLevel = userData.level;
+              setLevel(userLevel); // Set user level (100, 200, etc.)
+    
+              const coursesQuery = query(collection(db, `level:${userLevel}`));
+              const coursesSnapshot = await getDocs(coursesQuery);
+    
+              if (!coursesSnapshot.empty) {
+                const fetchedCourses = coursesSnapshot.docs.map((doc) => {
+                  const data = doc.data();
+                  const courseCode = data.courses ? data.courses.code : ''; // Extract course code
+                  const courseTitles = data.courseTitles || [];
+    
+                  return { code: courseCode, titles: courseTitles };
+                });
+    
+                setCourses(fetchedCourses);
+              } else {
+                setError('No courses found for this level.');
+              }
+            } else {
+              setError('User not found in the database.');
+            }
           }
-        } else {
-          setError('User not found in the database.');
+        } catch (err: any) {
+          setError(err.message || 'An error occurred while fetching courses.');
+        } finally {
+          setLoading(false);
         }
-      } catch (err: any) {
-        setError(err.message || 'An error occurred while fetching courses.');
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchUserLevelAndCourses();
-  }, []); // Empty dependency array means this effect runs only once after component mount
-  
+      };
+    
+      fetchUserLevelAndCourses();
+    }, [currentUser]); // Depend on currentUser to trigger this when it changes
+    
   // Handle loading and errors
   if (loading) {
     return <Center><CircularProgress/></Center>
