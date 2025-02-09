@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookAtlas, faComputer, faEllipsis, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBookAtlas, faComputer, faEllipsis, faLightbulb, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../../../firebaseConfig'; // Ensure this path is correct
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
@@ -232,6 +232,44 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     
       fetchUserLevelAndCourses();
     }, [currentUser]); // Depend on currentUser to trigger this when it changes
+
+    const [fact, setFact] = useState<string>('');
+    const [loading3, setLoading3] = useState<boolean>(true);
+    useEffect(() => {
+      // Function to fetch a random fact
+      const fetchRandomFact = async () => {
+        try {
+          const response = await fetch("https://uselessfacts.jsph.pl/random.json?language=en");
+          const data = await response.json();
+          setFact(data.text); // Set the fact text from the API response
+          setLoading3(false);
+        } catch (error) {
+          console.error("Error fetching fact:", error);
+          setLoading3(false);
+        }
+      };
+  
+      
+      fetchRandomFact();
+  
+      // Set up the interval to fetch a new fact every 10 seconds
+      const intervalId = setInterval(fetchRandomFact, 10000); 
+  
+      
+      return () => clearInterval(intervalId);
+    }, []); 
+
+  const colors = ['blue','red','pink','grey','black','darkred']
+  const [selectedcolor, setSelectedColor] = useState('');
+  useEffect(() => {
+    const changeColor = () => {
+      const randomIndex = Math.floor(Math.random() * colors.length);
+        setSelectedColor(colors[randomIndex]);
+    }
+    changeColor();
+    const intervalId = setInterval(changeColor, 5000); 
+    return () => clearInterval(intervalId);
+  },[])
     
   // Handle loading and errors
   if (loading) {
@@ -251,7 +289,6 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     slidesToShow:1,
     slidesToScroll:1
   }
-  
 
   return !backToLogIn ? (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
@@ -272,7 +309,9 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
           }}>
           </div>
           <div className="flex flex-col gap-2">
-            <h1 className="text-black font-extrabold opacity-65">Your current level: {level}</h1>
+            <h1 className="text-white font-extrabold" style={{
+              textShadow:'2px 4px 8px black'
+            }}>Your current level: {level}</h1>
             <p className="text-black opacity-65">Courses Available: {courses.length}</p>
           </div>
         </div>
@@ -292,14 +331,24 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             </div>
           )}
         </div>
+        <h2 className='font-bold relative -top-5'><FontAwesomeIcon icon={faLightbulb}/> Did you know?</h2>
+        <div className='w-80 h-20 rounded p-2 shadow-xll bg-white relative flex justify-center items-center overflow-auto text-sm -top-10' style={{
+          fontFamily:'lora',
+          borderLeft:'2px solid blue'
+        }}>
+          {loading3 ? <Center><CircularProgress/></Center> : <p style={{
+            color:selectedcolor,
+            transition:'1s ease-in-out'
+          }}>{fact}</p>}
+        </div>
       <div className="flex flex-start ml-5 flex-col w-[90%]">
-        <h2 className="text-left font-bold">
+        <h2 className="text-left font-bold relative -top-10">
           <FontAwesomeIcon icon={faStarHalfAlt} /> Your courses
         </h2>
-        <small className='animate-pulse'>Make sure you select a course before going to the library.</small>
+        <small className='animate-pulse relative -top-10'>Make sure you select a course before going to the library.</small>
       </div>
     
-      <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10">
+      <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10 relative -top-16">
         {courses.map((course, index) => (
           <div
             key={index}

@@ -3,12 +3,16 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faGear, faHome, faSignOut, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faChevronCircleRight, faClose, faComputer, faGear, faHome, faLock, faSignOut, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
-import { blue } from "@mui/material/colors";
+import { blue, red } from "@mui/material/colors";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import ListTile from "../components/list_tile";
+import { toast, ToastContainer } from "react-toastify";
+
 
 interface Props {
     children?: ReactNode;
@@ -33,6 +37,7 @@ export const MobileLayout: React.FC<Props> = ({
     const [userID, setUserID] = useState<any>(null);
     const [expiryDate, setExpiryDate] = useState<Date | null>(null);
     const [isExpired, setIsExpired] = useState(false);
+    const [email, setUserEmail] = useState('');
 
     // Fetch user name from Firestore based on user ID
     const FetchName = async () => {
@@ -42,6 +47,7 @@ export const MobileLayout: React.FC<Props> = ({
             const fetchedData: any = dataRef.docs[0]?.data(); // Handle if docs is empty
             if (fetchedData) {
                 setName(fetchedData.name);
+                setUserEmail(fetchedData.email);
             }
         }
     };
@@ -88,6 +94,7 @@ export const MobileLayout: React.FC<Props> = ({
             fetchData();
         }
     }, [userID, fetchExpiryDate]);
+   
 
     const Pop = () => {
         return (
@@ -102,6 +109,76 @@ export const MobileLayout: React.FC<Props> = ({
             </div>
         );
     };
+    const showToast = (message?: string) => {
+        toast.success(message ?? "Nothing passed.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+      };
+      const showToastW = (message?: string) => {
+        toast.warning(message ?? "Nothing passed.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+      };
+    
+    const handleClick = (index: number) => {
+        if(index === 0){
+            showToastW('This item is locked');
+        }else if(index === 1){
+            showToastW('This item is locked');
+        }else if(index === 2){
+            window.location.href = '/#';
+        }
+    }
+    const sidebar = () => {
+        return (
+            <div
+            className={`w-72 h-screen shadow-xl fixed top-0 z-20 bg-white transition-all duration-300 ease-in-out flex justify-start`}
+            style={{
+                left: popper ? '0' : '-100%',
+            }}
+            >
+            <div className="flex flex-col gap-2 h-40 w-full absolute shadow-xll" style={{
+                borderBottom:'1px solid rgba(0,0,0,0.1)'
+            }}>
+                <div className="flex flex-col justify-start p-5 gap-1">
+                <div className="rounded-full w-20 h-20 flex justify-center items-center" style={{
+                    border:'1px solid blue'
+                }}>
+                    <h1 className="font-bold text-blue-700 animate-pulse text-3xl">{name[0]}</h1>
+                </div>
+                <h6>{name}</h6>
+                <small>{email}</small>
+                </div>
+            </div>
+
+            <div className="flex flex-col justify-evenly h-40 absolute top-44 gap-4 w-full p-2">
+                {Array.from({length:3}).map((_,index) => 
+                <div key={index} onClick={() => handleClick(index)}>
+                    <ListTile title={index === 0 ? 'Quzzies' : index 
+                        === 1 ? 'Assignments' : index === 2 ? 'Log out' : ''
+                        
+                    } leading={index === 0 ? <FontAwesomeIcon icon={faComputer} color="blue"/>: index 
+                    === 1 ? <FontAwesomeIcon icon={faBook} color="blue"/> : index === 2 ? <FontAwesomeIcon icon={faSignOut} color="blue"/>
+                    : null
+                    
+                } trailing={index === 0 ? <FontAwesomeIcon icon={faLock}/> : index === 1 ? <FontAwesomeIcon icon={faLock}/> :  null}
+                className="h-auto w-full p-4 flex justify-between items-center shadow-xll rounded-xl"
+                 subtitle={index === 0 ? '' : index === 1 ? 'Coming soon' : index === 2 ? '' : ''}
+                 /></div>
+                )}
+            </div>
+            
+        </div>
+        );
+    }
 
     return (
         <>
@@ -123,11 +200,11 @@ export const MobileLayout: React.FC<Props> = ({
                     <Avatar
                         className="mr-3 mt-2"
                         onClick={() => {
-                            showPop((prev) => !prev);
+                            showPop(prev => !prev);
                         }}
-                        sx={{ bgcolor: blue[500] }}
+                        sx={{ bgcolor: popper ? red[200] : blue[500] }}
                     >
-                        {name[0]}
+                        {popper ? <FontAwesomeIcon icon={faClose} /> : name[0]}
                     </Avatar>
                 </div>
 
@@ -188,7 +265,8 @@ export const MobileLayout: React.FC<Props> = ({
                         </Fab>
                     </Box>
                 )}
-                {popper && <Pop />}
+                {sidebar()}
+                <ToastContainer aria-label={undefined} />
             </div>
         </>
     );

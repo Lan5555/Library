@@ -38,3 +38,20 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.slide-in{
+  animation: slide 0.3s ease-in-out;
+}
+.tran-l{
+  transition: left 0.3s ease-in-out;
+}
+
+@keyframes slide{
+  from{
+    transform: translateX(-300px);
+  }to{
+    transform: translateX(0px);
+  }
+}
+*{
+  user-select: none;
+}
