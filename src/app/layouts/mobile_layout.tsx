@@ -3,7 +3,7 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Fab, Box, Avatar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faChevronCircleRight, faClose, faComputer, faGear, faHome, faLock, faSignOut, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faChevronCircleRight, faClose, faComputer, faGear, faHome, faLock, faMoon, faSignOut, faSun, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faReadme } from "@fortawesome/free-brands-svg-icons";
 import { blue, red } from "@mui/material/colors";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
@@ -127,6 +127,23 @@ export const MobileLayout: React.FC<Props> = ({
           pauseOnHover: true,
         });
       };
+
+      //Darkmode
+      const [darkmode,setDarkmode] = useState(false);
+      useEffect(() => {
+        // Check localStorage for a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+    
+        if (savedTheme) {
+            // If a theme is saved, apply it
+            document.documentElement.classList.add(savedTheme);
+            setDarkmode(savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no theme saved, and the user prefers dark mode
+            document.documentElement.classList.add('dark');
+            setDarkmode(true);
+        }
+    }, []);
     
     const handleClick = (index: number) => {
         if(index === 0){
@@ -140,9 +157,10 @@ export const MobileLayout: React.FC<Props> = ({
     const sidebar = () => {
         return (
             <div
-            className={`w-72 h-screen shadow-xl fixed top-0 z-20 bg-white transition-all duration-300 ease-in-out flex justify-start`}
+            className={`w-72 h-screen shadow-xl fixed top-0 z-20 bg-white transition-all duration-300 ease-in-out flex justify-start dark:bg-transparent`}
             style={{
                 left: popper ? '0' : '-100%',
+                backdropFilter: darkmode ? 'blur(15px)' : ''
             }}
             >
             <div className="flex flex-col gap-2 h-40 w-full absolute shadow-xll" style={{
@@ -152,10 +170,10 @@ export const MobileLayout: React.FC<Props> = ({
                 <div className="rounded-full w-20 h-20 flex justify-center items-center" style={{
                     border:'1px solid blue'
                 }}>
-                    <h1 className="font-bold text-blue-700 animate-pulse text-3xl">{name[0]}</h1>
+                    <h1 className="font-bold text-blue-700 animate-pulse text-3xl dark:text-white">{name[0]}</h1>
                 </div>
-                <h6>{name}</h6>
-                <small>{email}</small>
+                <h6 className="dark:text-white">{name}</h6>
+                <small className="dark:text-white">{email}</small>
                 </div>
             </div>
 
@@ -180,12 +198,20 @@ export const MobileLayout: React.FC<Props> = ({
         );
     }
 
+    const toggleDarkMode = () => {
+        const newTheme = darkmode ? 'light' : 'dark';
+        document.documentElement.classList.remove(darkmode ? 'dark' : 'light');
+        document.documentElement.classList.add(newTheme);
+        localStorage.setItem('theme', newTheme);
+        setDarkmode(newTheme === 'dark');
+    };
+
     return (
         <>
             <div
-                className="w-full h-screen flex flex-col"
+                className="w-full h-screen flex flex-col dark:bg-black"
                 style={{
-                    backgroundImage: 'url("/avatar/bg5.jpg")',
+                    backgroundImage: darkmode ?'url("/avatar/forest.jpg")':'url("/avatar/bg5.jpg")',
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
@@ -194,18 +220,27 @@ export const MobileLayout: React.FC<Props> = ({
                 {/* Header */}
                 <div className="fixed top-0 w-full h-12 p-1 flex justify-between z-20">
                     <h1 className="text-xl font-bold mt-3">
-                        <FontAwesomeIcon icon={faBook} color="blue" className="ml-5" />
-                        Library
+                        <FontAwesomeIcon icon={faBook} color={darkmode ? 'white': "blue"} className="ml-5" /> 
+                         Library
                     </h1>
+                    <div className="flex justify-center items-center gap-4">
+                    <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{
+                        height:'20px'
+                    }} className="relative top-1 dark:text-white" onClick={() => toggleDarkMode()}></FontAwesomeIcon>
                     <Avatar
                         className="mr-3 mt-2"
                         onClick={() => {
                             showPop(prev => !prev);
                         }}
                         sx={{ bgcolor: popper ? red[200] : blue[500] }}
-                    >
+                    style={{
+                        height:'25px',
+                        width:'25px'
+                    }}>
                         {popper ? <FontAwesomeIcon icon={faClose} /> : name[0]}
                     </Avatar>
+                    </div>
+                    
                 </div>
 
                 {/* Content Area */}
@@ -229,6 +264,7 @@ export const MobileLayout: React.FC<Props> = ({
                                 zIndex: 1,
                                 borderTopLeftRadius: '30px',
                                 borderTopRightRadius: '30px',
+                                backgroundColor: darkmode ? 'transparent' : 'white'
                             }}
                         >
                             <BottomNavigationAction
@@ -251,7 +287,7 @@ export const MobileLayout: React.FC<Props> = ({
 
                         {/* Floating Action Button */}
                         <Fab
-                            color="primary"
+                            color={darkmode ? "inherit" : "primary"}
                             aria-label="add"
                             sx={{
                                 position: 'fixed',

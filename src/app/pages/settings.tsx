@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ListTile from "../components/list_tile";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faBox, faRegistered } from "@fortawesome/free-solid-svg-icons";
 import { Alert, Snackbar, SnackbarContent, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -75,13 +75,29 @@ export const Settings:React.FC = () => {
     useEffect(() => {
         fetchUserData();
     },[]);
+
+    const [darkmode,setDarkmode] = useState(false);
+      useEffect(() => {
+        // Check localStorage for a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+    
+        if (savedTheme) {
+            // If a theme is saved, apply it
+            document.documentElement.classList.add(savedTheme);
+            setDarkmode(savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no theme saved, and the user prefers dark mode
+            document.documentElement.classList.add('dark');
+            setDarkmode(true);
+        }
+    }, []);
     
     return (
         <div className="w-full h-auto p-2">
             <ListTile
             leading={<FontAwesomeIcon icon={faBell} style={{
                 height:'20px'
-            }}></FontAwesomeIcon>}
+            }} className="dark:text-white"></FontAwesomeIcon>}
             title="Push notifications"
             subtitle="Enable custom notifications"
             trailing={<Switch onChange={handleChange}></Switch>}
@@ -89,35 +105,36 @@ export const Settings:React.FC = () => {
             ></ListTile>
             <br></br>
              <ListTile
-            leading={<FontAwesomeIcon icon={faBell} style={{
+            leading={<FontAwesomeIcon icon={faBox} style={{
                 height:'20px'
-            }}></FontAwesomeIcon>}
+            }} className="dark:text-white"></FontAwesomeIcon>}
             title="Save Login details"
             subtitle="Auto login"
             trailing={<Switch onChange={handleChange2}></Switch>}
+            color={darkmode ? 'transparent' : ''}
             ></ListTile>
             <br></br>
             <div className="flex gap-5 relative p-2 justify-end items-center">
-                <h1 className="text-end">{!view ? 'View mode':'Edit mode'}</h1>
+                <h1 className="text-end dark:text-white">{!view ? 'View mode':'Edit mode'}</h1>
                 <Switch checked={view} onChange={handleChange3}></Switch>
             </div>
             <div className="w-full h-auto p-3">
-            <h2>Email Address</h2>
-            {view ? (<input className="w-full p-3 outline-none rounded shadow mt-3" placeholder="Edit"></input>):
-            <input className="w-full p-3 outline-none rounded shadow mt-3" readOnly value={email}></input>
+            <h2 className="dark:text-white">Email Address</h2>
+            {view ? (<input className="w-full p-3 outline-none rounded shadow mt-3 dark:bg-transparent dark:text-white" placeholder="Edit"></input>):
+            <input className="w-full p-3 outline-none rounded shadow mt-3 dark:bg-transparent dark:text-white" readOnly value={email}></input>
             }
-            <h2 className="mt-2">Current level</h2>
+            <h2 className="mt-2 dark:text-white">Current level</h2>
             {view ? (
-            <input className="w-full p-3 outline-none rounded shadow mt-3" placeholder="Edit"></input>
+            <input className="w-full p-3 outline-none rounded shadow mt-3 dark:bg-transparent dark:text-white" placeholder="Edit"></input>
             ):(
-            <input className="w-full p-3 outline-none rounded shadow mt-3" readOnly value={level}></input>
+            <input className="w-full p-3 outline-none rounded shadow mt-3 dark:bg-transparent dark:text-white" readOnly value={level}></input>
             )
             }
             <button className="w-full rounded-lg p-2 bg-gradient-to-tr from-slate-300 to-blue-600 text-center mt-8 shadow hover:bg-green-300 text-white" onClick={()=>{
                 showToast('You cant edit your details.');
             }}>{view? 'Confirm' : 'Static'}</button>
-            <h2 className="mt-10 font-bold">About</h2>
-            <p className="mt-5">Department of computer science. &copy;University of Jos</p>
+            <h2 className="mt-10 font-bold dark:text-white">About</h2>
+            <p className="mt-5 dark:text-white">Department of computer science. &copy;University of Jos</p>
             </div>
             <Snackbar
             open={open}

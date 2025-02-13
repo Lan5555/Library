@@ -269,7 +269,23 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
     changeColor();
     const intervalId = setInterval(changeColor, 5000); 
     return () => clearInterval(intervalId);
-  },[])
+  },[]);
+
+  const [darkmode,setDarkMode] = useState(false);
+  useEffect(() => {
+    // Check localStorage for a saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme) {
+        // If a theme is saved, apply it
+        document.documentElement.classList.add(savedTheme);
+        setDarkMode(savedTheme === 'dark');
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // If no theme saved, and the user prefers dark mode
+        document.documentElement.classList.add('dark');
+        setDarkMode(true);
+    }
+}, []);
     
   // Handle loading and errors
   if (loading) {
@@ -292,12 +308,13 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
 
   return !backToLogIn ? (
     <div className="p-3 flex justify-evenly items-center flex-col gap-10">
-      <div className="rounded-lg p-2 bg-gradient-to-tr from-blue-800 to-black w-[95%] h-48 flex justify-center items-center shadow" style={{
-        backgroundImage:'url("/avatar/bg.jpeg")',
+      <div className="rounded-lg p-2 w-[95%] h-48 flex justify-center items-center shadow dark:bg-transparent" style={{
+       backgroundImage: darkmode ? '':'url("/avatar/bg.jpeg")',
         backgroundPosition:'center',
         backgroundSize:'cover',
         backgroundRepeat:'no-repeat',
-        //border:'1px solid rgba(0,0,0,0.2)'
+        border: darkmode ? '1px solid white' : '',
+        backdropFilter: darkmode ? 'blur(3px)' : ''
       }}>
         <div className="flex gap-5">
           <div className="rounded-full p-2 flex justify-center items-center bg-gradient-to-tr h-20 w-20" style={{
@@ -305,18 +322,18 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             backgroundPosition:'center',
             backgroundSize:'cover',
             backgroundRepeat:'no-repeat',
-            border:'1px solid rgba(0,0,0,0.2)'
+            border: !darkmode ? '1px solid rgba(0,0,0,0.2)' : '1px solid white'
           }}>
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="text-white font-extrabold" style={{
-              textShadow:'2px 4px 8px black'
+              textShadow: !darkmode ? '2px 4px 8px black' : ''
             }}>Your current level: {level}</h1>
-            <p className="text-black opacity-65">Courses Available: {courses.length}</p>
+            <p className="text-black opacity-65 dark:text-white">Courses Available: {courses.length}</p>
           </div>
         </div>
       </div>
-        <h2 className='font-bold'>Trending courses</h2>
+        <h2 className='font-bold dark:text-white'>Trending courses</h2>
         <div className='grid gap-4 grid-cols-3 place-items-center'>
           {Array.from({length:3}).map((_,index) => 
             <div key={index} className='w-24 shadow-xll rounded bg-white h-16  flex justify-center items-center animate-pulse' style={{
@@ -331,21 +348,21 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             </div>
           )}
         </div>
-        <h2 className='font-bold relative -top-5'><FontAwesomeIcon icon={faLightbulb}/> Did you know?</h2>
-        <div className='w-80 h-20 rounded p-2 shadow-xll bg-white relative flex justify-center items-center overflow-auto text-sm -top-10' style={{
+        <h2 className='font-bold relative -top-5 dark:text-white'><FontAwesomeIcon icon={faLightbulb}/> Did you know?</h2>
+        <div className='w-80 h-20 rounded p-2 shadow-xll bg-white relative flex justify-center items-center overflow-auto text-sm -top-10 dark:bg-transparent' style={{
           fontFamily:'lora',
           borderLeft:'2px solid blue'
         }}>
           {loading3 ? <Center><CircularProgress/></Center> : <p style={{
             color:selectedcolor,
-            transition:'1s ease-in-out'
+            transition:'1s ease-in-out',
           }}>{fact}</p>}
         </div>
       <div className="flex flex-start ml-5 flex-col w-[90%]">
-        <h2 className="text-left font-bold relative -top-10">
+        <h2 className="text-left font-bold relative -top-10 dark:text-white">
           <FontAwesomeIcon icon={faStarHalfAlt} /> Your courses
         </h2>
-        <small className='animate-pulse relative -top-10'>Make sure you select a course before going to the library.</small>
+        <small className='animate-pulse relative -top-10 dark:text-white'>Make sure you select a course before going to the library.</small>
       </div>
     
       <div className="p-3 h-auto w-auto grid grid-cols-2 gap-10 place-items-center mb-10 relative -top-16">
@@ -355,18 +372,18 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             className="rounded-xl h-36 w-36 shadow-xll p-2 flex justify-center items-center flex-col gap-3 hover:bg-blue-300"
             onClick={() => pushCourse(course.code)} // Passing the full course code
            style={{
-            backgroundImage:'url("/avatar/book5.jpeg")',
+            backgroundImage:!darkmode ? 'url("/avatar/book5.jpeg")' : '',
             backgroundPosition:'center',
             backgroundSize:'cover',
             backgroundRepeat:'no-repeat',
-            border:'1px solid rgba(0,0,0,0.2)'
+            border: !darkmode ? '1px solid rgba(0,0,0,0.2)' : '1px solid white'
            }}>
-            <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-1" onClick={() => {}} />
-            <FontAwesomeIcon icon={faBookAtlas} color="blue" style={{ height: '40px' }} className="relative left-5" />
-            <h1 className="font-bold relative left-5" style={{
+            <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-1 dark:text-white" onClick={() => {}} />
+            <FontAwesomeIcon icon={faBookAtlas} color={!darkmode ? "blue" : 'white'} style={{ height: '40px' }} className="relative left-5" />
+            <h1 className="font-bold relative left-5 dark:text-white" style={{
               textShadow:'4px 8px 18px blue'
             }}>{course.code || 'No Code Available'}</h1> {/* Displaying the course code or fallback message */}
-            <small className='font-bold animate-pulse'>Click to preview</small>
+            <small className='font-bold animate-pulse dark:text-white'>Click to preview</small>
           </div>
         ))}
       </div>

@@ -55,3 +55,7 @@ body {
 *{
   user-select: none;
 }
+
+.b-b{
+  border: 1px solid white;
+}

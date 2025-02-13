@@ -170,7 +170,23 @@ const addTime = async (newDays: number) => {
       }
     };
     fetchData();
-  }, [user?.uid])
+  }, [user?.uid]);
+
+  const [darkmode,setDarkmode] = useState(false);
+      useEffect(() => {
+        // Check localStorage for a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+    
+        if (savedTheme) {
+            // If a theme is saved, apply it
+            document.documentElement.classList.add(savedTheme);
+            setDarkmode(savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no theme saved, and the user prefers dark mode
+            document.documentElement.classList.add('dark');
+            setDarkmode(true);
+        }
+    }, []);
 
   if (!expiryDate) return <Center><CircularProgress /></Center>;
 
@@ -197,37 +213,46 @@ const addTime = async (newDays: number) => {
         </div>
       )}
       
-      <div className="p-3 rounded-xl w-full h-44 bg-gradient-to-tr from-slate-300 to-blue-600 flex justify-center items-center flex-col gap-3">
+      <div className="p-3 rounded-xl w-full h-44 bg-gradient-to-tr from-slate-300 to-blue-600 flex justify-center items-center flex-col gap-3 dark:bg-transparent">
         <h1 className="font-bold text-3xl"><FontAwesomeIcon icon={faClock} /></h1>
         <h3 className="font-bold text-white shadow p-2">{isExpired ? 'Expired' : 'Expires'} {remainingTime}</h3>
       </div>
       
-      <h1 className="font-bold mt-5 opacity-70 text-lg">Renew plan</h1>
+      <h1 className="font-bold mt-5 opacity-70 text-lg dark:text-white">Renew plan</h1>
       
-      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
-        <h2 className="text-sm"><FontAwesomeIcon icon={faCalendarWeek} /> Weekly payment</h2>
+      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center dark:bg-transparent" style={{
+        border: darkmode ? '1px solid white' : '',
+        backdropFilter: darkmode ? 'blur(3px)' : ''
+      }}>
+        <h2 className="text-sm dark:text-white"><FontAwesomeIcon icon={faCalendarWeek} /> Weekly payment</h2>
         <Button
-          variant={'outlined'}
+          variant={!darkmode ? 'outlined' : 'contained'}
           onClick={() => processPayment(200, 14)}
         >
           NGN 200
         </Button>
       </div>
 
-      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center">
-        <h2 className="text-sm"><FontAwesomeIcon icon={faCalendar} /> Monthly payment</h2>
+      <div className="rounded-2xl bg-gray-200 w-full h-16 mt-5 flex justify-between p-5 items-center dark:bg-transparent" style={{
+        border: darkmode ? '1px solid white' : '',
+        backdropFilter: darkmode ? 'blur(3px)' : ''
+      }}>
+        <h2 className="text-sm dark:text-white"><FontAwesomeIcon icon={faCalendar} /> Monthly payment</h2>
         <Button
-        variant={'outlined'}
+        variant={!darkmode ? 'outlined' : 'contained'}
         onClick={() => processPayment(400, 28)}
         >
           NGN 400
         </Button>
       </div>
 
-      <h1 className="font-bold mt-5 text-sm opacity-65">Query transaction</h1>
+      <h1 className="font-bold mt-5 text-sm opacity-65 dark:text-white">Query transaction</h1>
       <h1 className="font-bold mt-5 text-sm text-blue-400">Renew plan</h1>
-      <p className="opacity-60 text-xs">Input transaction number from transaction receipt after successful transfer.</p>
-      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-1 mb-4">
+      <p className="opacity-60 text-xs dark:text-white">Input transaction number from transaction receipt after successful transfer.</p>
+      <div className="rounded-2xl bg-gray-200 w-full h-12 mt-5 flex justify-center items-center gap-1 mb-4 dark:bg-transparent" style={{
+        border: darkmode ? '1px solid white' : '',
+        backdropFilter: darkmode ? 'blur(3px)' : ''
+      }}>
         <FontAwesomeIcon icon={faListNumeric} />
         <input type="number" className="w-72 p-1 bg-transparent outline-none" placeholder="Input transaction number here" />
       </div>

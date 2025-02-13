@@ -58,6 +58,22 @@ const Register:React.FC<Props> = ({onclick}) => {
     ];
     const [login, setLogin] = useState(false);
 
+    const [darkmode,setDarkmode] = useState(false);
+    useEffect(() => {
+      // Check localStorage for a saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+  
+      if (savedTheme) {
+          // If a theme is saved, apply it
+          document.documentElement.classList.add(savedTheme);
+          setDarkmode(savedTheme === 'dark');
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          // If no theme saved, and the user prefers dark mode
+          document.documentElement.classList.add('dark');
+          setDarkmode(true);
+      }
+  }, []);
+
     const [isClicked, setClicked] = useState(true);
         const handleClick = () => {
             setLogin(true);
@@ -90,10 +106,16 @@ const Register:React.FC<Props> = ({onclick}) => {
                 }
         
     return mediaQuery === 'mobile' && !login ? (
-        <div className="flex flex-col justify-evenly items-center mt-10 w-full">
+        <div className="flex flex-col justify-evenly items-center w-full" style={{
+          backgroundImage: darkmode ? 'url(/avatar/forest.jpg)' : 'url(/avatar/bg2.jpg)',
+          backgroundPosition:'center',
+          backgroundSize:'cover',
+          backgroundRepeat:'no-repeat',
+          
+        }}>
             <img src="/avatar/register.png" alt="photo" className="h-52 w-52"></img>
-            <h1 className="mt-4 font-bold text-2xl text-blue-600">Create Account</h1>
-            <p className="relative top-5 text-center text-xs">Create an account<br></br>In order to access the documents</p>
+            <h1 className="mt-4 font-bold text-2xl text-blue-600 dark:text-white">Create Account</h1>
+            <p className="relative top-5 text-center text-xs dark:text-white">Create an account<br></br>In order to access the documents</p>
 
             <form className="mt-10 flex flex-col gap-7 w-full p-7" onSubmit={async(e:React.FormEvent)=>{
                 e.preventDefault();
@@ -129,7 +151,7 @@ const Register:React.FC<Props> = ({onclick}) => {
                 value={formData.name}
                 onChange={(e)=>setFormData({...formData, name:e.target.value})}
                  placeholder="NickName" className="w-full p-3 bg-blue-100 rounded-xl text-black placeholder-black shadow" required></input>
-                 <label htmlFor="set" className="relative left-2">Your current level</label>
+                 <label htmlFor="set" className="relative left-2 dark:text-white">Your current level</label>
                 <select onChange={(e) => setFormData({...formData,level:parseInt(e.target.value)})} className="shadow-xll p-3 rounded-lg bg-white" id="set" required>
                     {levels.map((element,index) => 
                     <option key={index}>{element}</option>
@@ -138,7 +160,7 @@ const Register:React.FC<Props> = ({onclick}) => {
                 <button className="text-white bg-blue-700 p-3 rounded-xl shadow-xl mt-10" type="submit">{loading ? <CircularProgress/> : 'Sign up'}</button>
             </form>
             <a className="mb-4 text-blue-500 select-none" onClick={handleClick}>Already have an account?</a>
-            <h3 className="text-center mb-10">&copy;Computer science department.<br></br>University of Jos.</h3>
+            <h3 className="text-center mb-10 dark:text-white">&copy;Computer science department.<br></br>University of Jos.</h3>
             <ToastContainer aria-label={undefined}/>
         </div>
     ):mediaQuery === 'mobile' && login ? (<Login onclick={()=>{}}/>): (<Notify message="Desktop version coming soon"></Notify>)

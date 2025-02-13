@@ -116,6 +116,21 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   }, [courses]); // This triggers when courses are updated
   
+  const [darkmode,setDarkmode] = useState(false);
+      useEffect(() => {
+        // Check localStorage for a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+    
+        if (savedTheme) {
+            // If a theme is saved, apply it
+            document.documentElement.classList.add(savedTheme);
+            setDarkmode(savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no theme saved, and the user prefers dark mode
+            document.documentElement.classList.add('dark');
+            setDarkmode(true);
+        }
+    }, []);
 
   const showToast = (message?: string) => {
     toast.success(message ?? "Nothing passed.", {
@@ -150,16 +165,17 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
             const isSelected = courseName && course.code === courseName;
             return (
               <div
-                className={`p-4 ${isSelected ? 'bg-blue-100' : ''}`} // Optional: apply a background if the course is selected
+                className={`p-4 ${isSelected && !darkmode ? 'bg-blue-100' : isSelected && darkmode ? 'bg-gray-400' : ''}`} // Optional: apply a background if the course is selected
                 key={titleIndex}
                 onClick={() => handleLinkClick(courseIndex, titleIndex)}
                id={`course`}>
                 <ListTile
-                  leading={<FontAwesomeIcon icon={faBook} color="blue" style={{ height: '25px' }} />}
+                  leading={<FontAwesomeIcon icon={faBook} color={darkmode ? "white": "blue"} style={{ height: '25px' }} />}
                   title={title} // Display course title
                   subtitle={'Click to view'}
-                  trailing={<FontAwesomeIcon icon={faAngleRight} />}
-                  color={isSelected ? 'lightblue' : ''}
+                  trailing={<FontAwesomeIcon icon={faAngleRight} className="dark:text-white"/>}
+                  color={isSelected && !darkmode ? 'lightblue' : darkmode ? 'transparent' : isSelected && darkmode ? 'grey' : ''}
+                
                 />
               </div>
             );

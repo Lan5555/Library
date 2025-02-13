@@ -58,6 +58,21 @@ const Login: React.FC<Props> = ({ onclick }) => {
     };
   }, []); // Empty dependency array means this effect runs once on mount
 
+  const [darkmode,setDarkmode] = useState(false);
+      useEffect(() => {
+        // Check localStorage for a saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+    
+        if (savedTheme) {
+            // If a theme is saved, apply it
+            document.documentElement.classList.add(savedTheme);
+            setDarkmode(savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no theme saved, and the user prefers dark mode
+            document.documentElement.classList.add('dark');
+            setDarkmode(true);
+        }
+    }, []);
 
   const style: CSSProperties = {
     textShadow: '0px 0px 1px black',
@@ -89,13 +104,19 @@ const Login: React.FC<Props> = ({ onclick }) => {
     const [register, setRegister] = useState(false);
     const [isVisible, setIsvisble] = useState(false);
   return  mediaQuery === 'mobile' && !register ? (
-    <div className="flex flex-col justify-evenly items-center mt-10 w-full">
+    <div className="flex flex-col justify-evenly items-center w-full" style={{
+      backgroundImage: darkmode ? 'url(/avatar/forest.jpg)' : 'url(/avatar/bg2.jpg)',
+      backgroundPosition:'center',
+      backgroundSize:'cover',
+      backgroundRepeat:'no-repeat',
+      height:'100vh'
+    }}>
     
-      <img src="/avatar/login.png" alt="login" className="h-60 w-60" />
-      <h1 className="font-bold text-2xl text-blue-700 relative top-6" style={style}>Login here</h1>
-      <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7">
+      <img src="/avatar/login.png" alt="login" className="h-60 w-60 relative top-5" />
+      <h1 className="font-bold text-2xl text-blue-700 relative -top-4 dark:text-white" style={style}>Login here</h1>
+      <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7 relative -top-10">
       
-<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-5">
+<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-3 dark:bg-transparent dark:b-b">
   <FontAwesomeIcon
     icon={faMailBulk}
     className="absolute left-3 text-gray-600"  // You can adjust the size here
@@ -105,13 +126,13 @@ const Login: React.FC<Props> = ({ onclick }) => {
     type="email"
     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
     placeholder="Email"
-    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent dark:text-white"
     required
   />
 </div>
 
 
-<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-5">
+<div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-3 dark:b-b dark:bg-transparent">
   <FontAwesomeIcon
     icon={faLock}
     className="absolute left-3 text-gray-600"
@@ -121,7 +142,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
     type={!isVisible ? "password" : "text"}
     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
     placeholder="Password"
-    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent dark:b-b"
     required
   />
   <FontAwesomeIcon
@@ -133,18 +154,18 @@ const Login: React.FC<Props> = ({ onclick }) => {
 
 
         <div className="flex w-full justify-end p-2">
-          <a className="text-pretty text-xs">Forgotten your password?</a>
+          <a className="text-pretty text-xs dark:text-white">Forgotten your password?</a>
         </div>
         <button type="submit" className="text-white bg-blue-700 p-3 rounded-xl shadow-xl hover:bg-gray-400">
           {loading ? <CircularProgress /> : 'Sign in'}
         </button>
       </form>
-      <a className="animate-pulse text-blue-700 select-none" onClick={() =>{
+      <a className="animate-pulse text-blue-700 select-none dark:text-gray-100" onClick={() =>{
        onclick(true);
        setRegister(true);
       }
     }>Create an account</a>
-      <h3 className="text-center mb-10">&copy; Computer Science Department. <br /> University of Jos.</h3>
+      <h3 className="text-center mb-10 dark:text-white">&copy; Computer Science Department. <br /> University of Jos.</h3>
       <ToastContainer aria-label="Toast messages" />
     </div>
   ): mediaQuery === 'mobile' && register ? (<Register onclick={()=>{}}/>) : (<Notify message="Desktop version coming soon!"></Notify>);
