@@ -204,6 +204,7 @@ export const MobileLayout: React.FC<Props> = ({
         document.documentElement.classList.add(newTheme);
         localStorage.setItem('theme', newTheme);
         setDarkmode(newTheme === 'dark');
+        window.location.reload();
     };
 
     return (

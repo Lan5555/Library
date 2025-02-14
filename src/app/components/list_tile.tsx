@@ -34,7 +34,7 @@ export const ListTile:React.FC<props> = ({leading,trailing,title,subtitle,
         <div className={className} style={{
             backgroundColor:color,
             border: darkmode ? '1px solid white' : '',
-            backdropFilter: darkmode ? 'blur(3px)' : ''
+            backdropFilter: darkmode ? 'blur(6px)' : ''
         }}>
             <div className="flex gap-5 justify-center items-center">
             {leading}

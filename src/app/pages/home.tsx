@@ -351,7 +351,8 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
         <h2 className='font-bold relative -top-5 dark:text-white'><FontAwesomeIcon icon={faLightbulb}/> Did you know?</h2>
         <div className='w-80 h-20 rounded p-2 shadow-xll bg-white relative flex justify-center items-center overflow-auto text-sm -top-10 dark:bg-transparent' style={{
           fontFamily:'lora',
-          borderLeft:'2px solid blue'
+          borderLeft:'2px solid blue',
+          backdropFilter: darkmode ? 'blur(6px)' : ''
         }}>
           {loading3 ? <Center><CircularProgress/></Center> : <p style={{
             color:selectedcolor,
@@ -376,7 +377,8 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
             backgroundPosition:'center',
             backgroundSize:'cover',
             backgroundRepeat:'no-repeat',
-            border: !darkmode ? '1px solid rgba(0,0,0,0.2)' : '1px solid white'
+            border: !darkmode ? '1px solid rgba(0,0,0,0.2)' : '1px solid white',
+            backdropFilter: darkmode ? 'blur(6px)' : ''
            }}>
             <FontAwesomeIcon icon={faEllipsis} className="relative left-14 -top-1 dark:text-white" onClick={() => {}} />
             <FontAwesomeIcon icon={faBookAtlas} color={!darkmode ? "blue" : 'white'} style={{ height: '40px' }} className="relative left-5" />

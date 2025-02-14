@@ -113,7 +113,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
     }}>
     
       <img src="/avatar/login.png" alt="login" className="h-60 w-60 relative top-5" />
-      <h1 className="font-bold text-2xl text-blue-700 relative -top-4 dark:text-white" style={style}>Login here</h1>
+      <h1 className="font-bold text-2xl text-blue-700 relative -top-2 dark:text-white" style={style}>Login here</h1>
       <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-7 w-full p-7 relative -top-10">
       
 <div className="relative flex items-center bg-blue-100 rounded shadow w-full mb-3 dark:bg-transparent dark:b-b">
@@ -126,7 +126,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
     type="email"
     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
     placeholder="Email"
-    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent dark:text-white"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent dark:text-white b-b"
     required
   />
 </div>
@@ -142,7 +142,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
     type={!isVisible ? "password" : "text"}
     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
     placeholder="Password"
-    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent dark:b-b"
+    className="w-full pl-10 p-3 bg-blue-100 rounded text-black placeholder-gray-400 outline-none dark:bg-transparent b-b"
     required
   />
   <FontAwesomeIcon
@@ -165,7 +165,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
        setRegister(true);
       }
     }>Create an account</a>
-      <h3 className="text-center mb-10 dark:text-white">&copy; Computer Science Department. <br /> University of Jos.</h3>
+      <h3 className="text-center mb-16 dark:text-white">&copy; Computer Science Department. <br /> University of Jos.</h3>
       <ToastContainer aria-label="Toast messages" />
     </div>
   ): mediaQuery === 'mobile' && register ? (<Register onclick={()=>{}}/>) : (<Notify message="Desktop version coming soon!"></Notify>);

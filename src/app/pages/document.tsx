@@ -3,14 +3,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ListTile from "../components/list_tile";
-import { faAngleRight, faBook } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faArrowDownLong, faBook, faScroll } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { getAuth } from "firebase/auth"; // Firebase Authentication
 import { db } from "../../../firebaseConfig"; // Your Firebase DB initialization
 import { query, collection, where, getDocs } from "firebase/firestore"; // Firebase Firestore methods
 import Center from "../hooks/center";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Fab, IconButton } from "@mui/material";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
 
 
@@ -89,17 +89,21 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   };
 
-  const handleScroll = () => {
-    const elementId = `course`;
-    console.log(`Scrolling to element with ID: ${elementId}`);
-    const element = document.getElementById(elementId);
-    if (element) {
-      console.log(`Found element: ${elementId}`);
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      console.error(`Element with ID ${elementId} not found`);
-    }
-  };
+  // const handleScroll = () => {
+  //   const elementId = 'course';
+  //   console.log(`Scrolling to element with ID: ${elementId}`);
+    
+  //   const element = document.getElementById(elementId);
+    
+  //   if (element) {
+  //     console.log(`Found element: ${elementId}`);
+  //     element.scrollIntoView({ behavior: "smooth", block: "start" });
+  //   } else {
+  //     console.error(`Element with ID ${elementId} not found`);
+  //   }
+  // };
+  
+  
   
   
 
@@ -107,14 +111,14 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     fetchUserData();
   }, []); 
 
-  useEffect(() => {
-    if (courses.length > 0) {
-      // Use setTimeout to delay the scroll just to give the DOM time to render
-      setTimeout(() => {
-        handleScroll(); // Scroll to the first course and title
-      }, 1000); // Delay in milliseconds (adjust if needed)
-    }
-  }, [courses]); // This triggers when courses are updated
+  // useEffect(() => {
+  //   if (courses.length > 0) {
+  //     // Use setTimeout to delay the scroll just to give the DOM time to render
+  //     setTimeout(() => {
+  //       handleScroll(); // Scroll to the first course and title
+  //     }, 1000); // Delay in milliseconds (adjust if needed)
+  //   }
+  // }, [courses]); // This triggers when courses are updated
   
   const [darkmode,setDarkmode] = useState(false);
       useEffect(() => {
@@ -156,8 +160,18 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     }
   };
 
+  const handleScrollToCourse = (courseTitle: string) => {
+    const element = document.getElementById(courseTitle);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      console.error(`Element with title ${courseTitle} not found`);
+    }
+  };
+  
+
   return (
-    <div className="h-auto w-auto flex flex-col gap-5">
+    <div className="h-auto w-auto flex flex-col gap-5" id="page">
       {courses.length > 0 ? (
         courses.map((course, courseIndex) => (
           course.courseNames.map((title: string, titleIndex: number) => {
@@ -168,7 +182,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
                 className={`p-4 ${isSelected && !darkmode ? 'bg-blue-100' : isSelected && darkmode ? 'bg-gray-400' : ''}`} // Optional: apply a background if the course is selected
                 key={titleIndex}
                 onClick={() => handleLinkClick(courseIndex, titleIndex)}
-               id={`course`}>
+               id={title}>
                 <ListTile
                   leading={<FontAwesomeIcon icon={faBook} color={darkmode ? "white": "blue"} style={{ height: '25px' }} />}
                   title={title} // Display course title
@@ -189,6 +203,11 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
         </div>
       )}
       <ToastContainer aria-label={undefined} />
+      <button className="fixed top-20 right-5 rounded border-none animate-pulse bg-black p-2">
+        <FontAwesomeIcon icon={faArrowDownLong} className="text-white" onClick={()=>{
+          handleScrollToCourse(courses[2]?.courseNames[8]); // Pass the first course name here
+          }}></FontAwesomeIcon>
+      </button>
     </div>
   );
 };
