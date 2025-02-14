@@ -267,7 +267,7 @@ export const MobileLayout: React.FC<Props> = ({
                                 borderTopRightRadius: '30px',
                                 backgroundColor: darkmode ? 'transparent' : 'white',
                                 color: darkmode ? 'white' : 'black',  // Change text color based on darkmode
-                                border:darkmode ? '1px solid white' : ''
+                                backdropFilter: darkmode ? 'blur(10px)' : ''
                             }}
                         >
                             <BottomNavigationAction
