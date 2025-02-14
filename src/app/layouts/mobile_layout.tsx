@@ -265,24 +265,38 @@ export const MobileLayout: React.FC<Props> = ({
                                 zIndex: 1,
                                 borderTopLeftRadius: '30px',
                                 borderTopRightRadius: '30px',
-                                backgroundColor: darkmode ? 'transparent' : 'white'
+                                backgroundColor: darkmode ? 'transparent' : 'white',
+                                color: darkmode ? 'white' : 'black',  // Change text color based on darkmode
+                                border:darkmode ? '1px solid white' : ''
                             }}
                         >
                             <BottomNavigationAction
                                 label="Home"
                                 icon={<FontAwesomeIcon icon={faHome} onClick={home} />}
+                                sx={{
+                                    color: darkmode ? 'white' : 'black', // Icon color based on darkmode
+                                  }}
                             />
                             <BottomNavigationAction
                                 label="Library"
                                 icon={<FontAwesomeIcon icon={faBook} onClick={library} />}
+                                sx={{
+                                    color: darkmode ? 'white' : 'black', // Icon color based on darkmode
+                                  }}
                             />
                             <BottomNavigationAction
                                 label="Payment"
                                 icon={<FontAwesomeIcon icon={faWallet} onClick={subscription} />}
+                                sx={{
+                                    color: darkmode ? 'white' : 'black', // Icon color based on darkmode
+                                  }}
                             />
                             <BottomNavigationAction
                                 label="Settings"
                                 icon={<FontAwesomeIcon icon={faGear} onClick={settings} />}
+                                sx={{
+                                    color: darkmode ? 'white' : 'black', // Icon color based on darkmode
+                                  }}
                             />
                         </BottomNavigation>
 
