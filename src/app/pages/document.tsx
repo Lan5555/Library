@@ -166,9 +166,11 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
       setCondition(false);
     },1000);
     return (
-      <FontAwesomeIcon icon={faBook} className="rounded-full text-blue-700 shadow w-5 h-5 move-down absolute top-7 left-52 dark:text-white">
-
-      </FontAwesomeIcon>
+      <div className="w-full absolute top-7 flex justify-center">
+        <FontAwesomeIcon icon={faBook} className="rounded-full text-blue-700 shadow w-5 h-5 move-down dark:text-white">
+        </FontAwesomeIcon>
+      </div>
+      
     );
   }
 
