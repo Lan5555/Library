@@ -225,7 +225,7 @@ export const MobileLayout: React.FC<Props> = ({
                          Library
                     </h1>
                     <div className="flex justify-center items-center gap-4">
-                    <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{
+                    <FontAwesomeIcon icon={!darkmode ? faSun : faMoon} style={{
                         height:'20px'
                     }} className="relative top-1 dark:text-white" onClick={() => toggleDarkMode()}></FontAwesomeIcon>
                     <Avatar
