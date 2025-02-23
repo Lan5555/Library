@@ -147,7 +147,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
   };
 
   
-
+  const [shouldMove, setCondition] = useState(false);
   // Handle link click and store the selected course in localStorage
   const handleLinkClick = (courseIndex: number, titleIndex: number) => {
     const selectedCourse = courses[courseIndex];
@@ -156,9 +156,21 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
       // Store the selected course and its link in localStorage
       const selectedData = selectedLink;
       localStorage.setItem('link', selectedData);
-      showToast('Course ready, now click the icon below to read!');
+      showToast('Course ready, now click the book icon below to read!');
+      setCondition(true);
     }
   };
+
+  const divBadge = () => {
+    setTimeout(()=>{
+      setCondition(false);
+    },1000);
+    return (
+      <FontAwesomeIcon icon={faBook} className="rounded-full text-blue-700 shadow w-5 h-5 move-down absolute top-7 left-52 dark:text-white">
+
+      </FontAwesomeIcon>
+    );
+  }
 
   const handleScrollToCourse = (courseTitle: string) => {
     const element = document.getElementById(courseTitle);
@@ -208,6 +220,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
           handleScrollToCourse(courses[2]?.courseNames[8]); // Pass the first course name here
           }}></FontAwesomeIcon>
       </button>
+      {shouldMove && divBadge()}
     </div>
   );
 };

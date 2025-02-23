@@ -36,7 +36,7 @@ export const Home: React.FC<CourseProps> = ({ pushCourse }) => {
   const [currentUser, setUser] = useState<any>(null);
 
   const [userEmail,setUserEmail] = useState('');
-  const [newCode, setNewCode] = useState(['MTH','GST','CHM','BIO','CSC',]);
+  const [newCode, setNewCode] = useState(['MTH','GST','CHM','BIO','CSC','PHY','PSB','SLT']);
 
 
   useEffect(() => {

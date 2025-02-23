@@ -220,7 +220,7 @@ export const MobileLayout: React.FC<Props> = ({
             >
                 {/* Header */}
                 <div className="fixed top-0 w-full h-12 p-1 flex justify-between z-20">
-                    <h1 className="text-xl font-bold mt-3">
+                    <h1 className="text-xl font-bold mt-3 dark:text-white">
                         <FontAwesomeIcon icon={faBook} color={darkmode ? 'white': "blue"} className="ml-5" /> 
                          Library
                     </h1>

@@ -59,3 +59,14 @@ body {
 .b-b{
   border: 1px solid white;
 }
+.move-down{
+  animation: moveDown 1s ease-in-out;
+}
+
+@keyframes moveDown{
+  from{
+    transform: translateY(-80%);
+  }to{
+    transform: translateY(90vh);
+  }
+}
