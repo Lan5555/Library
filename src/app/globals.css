@@ -60,7 +60,7 @@ body {
   border: 1px solid white;
 }
 .move-down{
-  animation: moveDown 1s ease-in-out;
+  animation: bounce 1s ease-in-out, moveDown 1s ease-in-out;
 }
 
 @keyframes moveDown{

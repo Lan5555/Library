@@ -167,7 +167,7 @@ const DocumentPage: React.FC<Props> = ({ courseName = '' }) => {
     },1000);
     return (
       <div className="w-full absolute top-7 flex justify-center">
-        <FontAwesomeIcon icon={faBook} className="rounded-full text-blue-700 shadow w-5 h-5 move-down dark:text-white">
+        <FontAwesomeIcon icon={faBook} className="rounded-full text-blue-700 shadow w-5 h-5  move-down dark:text-white">
         </FontAwesomeIcon>
       </div>
       

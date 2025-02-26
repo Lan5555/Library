@@ -156,7 +156,9 @@ const CheckTime:React.FC = () => {
                     handleFlutterPayment({
                         callback:  (response) => {
                             addTime();
-                            router.push('/pages/homepage')
+                            setTimeout(() => {
+                              router.push('/pages/homepage');
+                            },3000);
                             closePaymentModal();
                             saveUserAmount();
                         },
