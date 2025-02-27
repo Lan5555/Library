@@ -70,3 +70,7 @@ body {
     transform: translateY(90vh);
   }
 }
+
+.transition{
+  transform: bottom 0.3s ease-in-out;
+}

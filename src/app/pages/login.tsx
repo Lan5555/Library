@@ -11,7 +11,9 @@ import Notify from "../hooks/notification";
 import 'react-toastify/ReactToastify.css';  // Import the Toastify CSS
 import Register from "./register";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faLock, faMailBulk, faMailForward, faSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faKey, faLock, faMailBulk, faMailForward, faSignOut, faSlash } from "@fortawesome/free-solid-svg-icons";
+import Hover from "./hovering";
+import BottomSheet from "../components/bottom_sheet";
 
 
 
@@ -99,7 +101,8 @@ const Login: React.FC<Props> = ({ onclick }) => {
       showToast('Oops, something went wrong.', 'warning');
     }
   };
-  
+
+
 
     const [register, setRegister] = useState(false);
     const [isVisible, setIsvisble] = useState(false);
@@ -166,6 +169,7 @@ const Login: React.FC<Props> = ({ onclick }) => {
       }
     }>Create an account</a>
       <h3 className="text-center mb-16 dark:text-white">&copy; Computer Science Department. <br /> University of Jos.</h3>
+      <BottomSheet/>
       <ToastContainer aria-label="Toast messages" />
     </div>
   ): mediaQuery === 'mobile' && register ? (<Register onclick={()=>{}}/>) : (<Notify message="Desktop version coming soon!"></Notify>);
